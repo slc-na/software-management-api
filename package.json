@@ -2,7 +2,7 @@
   "name": "software-management-api",
   "version": "0.0.1",
   "description": "",
-  "author": "",
+  "author": "AW22-1",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
@@ -20,9 +20,14 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@apollo/server": "^4.10.0",
+    "@nestjs/apollo": "^12.0.11",
     "@nestjs/common": "^10.0.0",
     "@nestjs/core": "^10.0.0",
+    "@nestjs/graphql": "^12.0.11",
     "@nestjs/platform-express": "^10.0.0",
+    "@prisma/client": "^5.7.1",
+    "graphql": "^16.8.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1"
   },
@@ -48,7 +53,7 @@
     "ts-loader": "^9.4.3",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.1.3"
+    "typescript": "^5.3.3"
   },
   "jest": {
     "moduleFileExtensions": [
@@ -66,5 +71,8 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
+  },
+  "prisma": {
+    "schema": "src/database/schema.prisma"
   }
 }
