@@ -3,6 +3,9 @@ import { Course, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/database/prisma.service';
 import { UpdateCourseInput } from './dto/update-course.input';
 
+
+
+
 @Injectable()
 export class CoursesRepository {
   constructor(private prisma: PrismaService) {}
