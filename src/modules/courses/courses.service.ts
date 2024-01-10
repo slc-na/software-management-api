@@ -4,6 +4,7 @@ import { Course } from "@prisma/client";
 import { SelectCourseByIdInput } from "./dto/select-course-by-id.input";
 import { UpdateCourseInput } from "./dto/update-course.input";
 import { DeleteCourseInput } from "./dto/delete-course.input";
+import { SelectCoursesInput } from "./dto/select-courses.input";
 
 @Injectable()
 export class CoursesService {
@@ -29,8 +30,8 @@ export class CoursesService {
     });
   }
 
-  async getCourses() {
-    return await this.repository.getCourses({});
+  async getCourses(params: SelectCoursesInput) {
+    return await this.repository.getCourses(params);
   }
 
   async getCourseById(params: SelectCourseByIdInput) {

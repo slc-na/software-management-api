@@ -4,6 +4,7 @@ import { RoomsRepository } from "./rooms.repository";
 import { SelectRoomByIdInput } from "./dto/select-room-by-id.input";
 import { UpdateRoomInput } from "./dto/update-room.input";
 import { DeleteRoomInput } from "./dto/delete-room.input";
+import { SelectRoomsInput } from "./dto/select-rooms.input";
 
 @Injectable()
 export class RoomsService {
@@ -18,8 +19,8 @@ export class RoomsService {
     });
   }
 
-  async getRooms() {
-    return await this.repository.getRooms({});
+  async getRooms(params: SelectRoomsInput) {
+    return await this.repository.getRooms(params);
   }
 
   async getRoomById(params: SelectRoomByIdInput) {

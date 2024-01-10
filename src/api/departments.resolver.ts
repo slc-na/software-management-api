@@ -5,6 +5,7 @@ import { DepartmentsService } from "src/modules/departments/departments.service"
 import { CreateDepartmentInput } from "src/modules/departments/dto/create-department.input";
 import { DeleteDepartmentInput } from "src/modules/departments/dto/delete-department.input";
 import { SelectDepartmentByIdInput } from "src/modules/departments/dto/select-department-by-id.input";
+import { SelectDepartmentsInput } from "src/modules/departments/dto/select-departments.input";
 import { UpdateDepartmentInput } from "src/modules/departments/dto/update-department.input";
 
 @Resolver()
@@ -12,8 +13,8 @@ export class DepartmentsResolver {
   constructor(private readonly departmentsService: DepartmentsService) {}
 
   @Query(() => [Department])
-  async getDepartments() {
-    return this.departmentsService.getDepartments();
+  async getDepartments(@Args('selectDepartmentsInput') selectDepartmentsInput: SelectDepartmentsInput) {
+    return this.departmentsService.getDepartments(selectDepartmentsInput);
   }
 
   @Query(() => Department)

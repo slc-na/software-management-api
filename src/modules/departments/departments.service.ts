@@ -4,6 +4,7 @@ import { DepartmentsRepository } from "./departments.repository";
 import { SelectDepartmentByIdInput } from "./dto/select-department-by-id.input";
 import { UpdateDepartmentInput } from "./dto/update-department.input";
 import { DeleteDepartmentInput } from "./dto/delete-department.input";
+import { SelectDepartmentsInput } from "./dto/select-departments.input";
 
 @Injectable()
 export class DepartmentsService {
@@ -18,8 +19,8 @@ export class DepartmentsService {
     });
   }
 
-  async getDepartments() {
-    return await this.repository.getDepartments({});
+  async getDepartments(params: SelectDepartmentsInput) {
+    return await this.repository.getDepartments(params);
   }
 
   async getDepartmentById(params: SelectDepartmentByIdInput) {

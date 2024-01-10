@@ -4,6 +4,7 @@ import { SoftwaresRepository } from "./softwares.repository";
 import { SelectSoftwareByIdInput } from "./dto/select-software-by-id.input";
 import { UpdateSoftwareInput } from "./dto/update-software.input";
 import { DeleteSoftwareInput } from "./dto/delete-software.input";
+import { SelectSoftwaresInput } from "./dto/select-softwares.input";
 
 @Injectable()
 export class SoftwaresService {
@@ -24,8 +25,8 @@ export class SoftwaresService {
     });
   }
 
-  async getSoftwares() {
-    return await this.repository.getSoftwares({});
+  async getSoftwares(params: SelectSoftwaresInput) {
+    return await this.repository.getSoftwares(params);
   }
 
   async getSoftwareById(params: SelectSoftwareByIdInput) {

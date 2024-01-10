@@ -5,6 +5,7 @@ import { CoursesService } from "src/modules/courses/courses.service";
 import { CreateCourseInput } from "src/modules/courses/dto/create-course.input";
 import { DeleteCourseInput } from "src/modules/courses/dto/delete-course.input";
 import { SelectCourseByIdInput } from "src/modules/courses/dto/select-course-by-id.input";
+import { SelectCoursesInput } from "src/modules/courses/dto/select-courses.input";
 import { UpdateCourseInput } from "src/modules/courses/dto/update-course.input";
 
 @Resolver()
@@ -12,8 +13,8 @@ export class CoursesResolver {
   constructor(private readonly coursesService: CoursesService) {}
 
   @Query(() => [Course])
-  async getCourses() {
-    return this.coursesService.getCourses();
+  async getCourses(@Args('selectCoursesInput') selectCoursesInput: SelectCoursesInput) {
+    return this.coursesService.getCourses(selectCoursesInput);
   }
 
   @Query(() => Course)

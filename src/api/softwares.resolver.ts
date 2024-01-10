@@ -3,6 +3,7 @@ import { Resolver } from "@nestjs/graphql";
 import { CreateSoftwareInput } from "src/modules/softwares/dto/create-software.input";
 import { DeleteSoftwareInput } from "src/modules/softwares/dto/delete-software.input";
 import { SelectSoftwareByIdInput } from "src/modules/softwares/dto/select-software-by-id.input";
+import { SelectSoftwaresInput } from "src/modules/softwares/dto/select-softwares.input";
 import { UpdateSoftwareInput } from "src/modules/softwares/dto/update-software.input";
 import { Software } from "src/modules/softwares/softwares.model";
 import { SoftwaresService } from "src/modules/softwares/softwares.service";
@@ -12,8 +13,8 @@ export class SoftwaresResolver {
   constructor(private readonly softwaresService: SoftwaresService) {}
 
   @Query(() => [Software])
-  async getSoftwares() {
-    return this.softwaresService.getSoftwares();
+  async getSoftwares(@Args('selectSoftwaresInput') selectSoftwaresInput: SelectSoftwaresInput) {
+    return this.softwaresService.getSoftwares(selectSoftwaresInput);
   }
 
   @Query(() => Software)

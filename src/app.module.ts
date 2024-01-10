@@ -24,6 +24,8 @@ import { SoftwareOnRoomsModule } from './modules/software-on-rooms/software-on-r
 import { SoftwareOnRoomsResolver } from './api/software-on-rooms.resolver';
 import { SoftwaresModule } from './modules/softwares/softwares.module';
 import { SoftwaresResolver } from './api/softwares.resolver';
+import { RoomsModule } from './modules/rooms/rooms.module';
+import { RoomsResolver } from './api/rooms.resolver';
 
 @Module({
   imports: [
@@ -44,6 +46,7 @@ import { SoftwaresResolver } from './api/softwares.resolver';
     SoftwareGroupsModule,
     SoftwareOnRoomsModule,
     SoftwaresModule,
+    RoomsModule,
   ],
   controllers: [],
   providers: [
@@ -58,6 +61,7 @@ import { SoftwaresResolver } from './api/softwares.resolver';
     SoftwareGroupsResolver,
     SoftwareOnRoomsResolver,
     SoftwaresResolver,
+    RoomsResolver,
   ],
 })
 export class AppModule {}
