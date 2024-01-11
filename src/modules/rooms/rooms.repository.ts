@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Room, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/database/prisma.service';
 import { UpdateRoomInput } from './dto/update-room.input';
+import { RoomsCount } from './rooms-count.model';
 
 @Injectable()
 export class RoomsRepository {
@@ -19,6 +20,11 @@ export class RoomsRepository {
         _count: true,
       }
     })
+  }
+
+  async getRoomsCount(): Promise<RoomsCount> {
+    const count = await this.prisma.room.count();
+    return { count };
   }
 
   async getRooms(params: {

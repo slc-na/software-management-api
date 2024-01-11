@@ -25,6 +25,10 @@ export class SoftwaresService {
     });
   }
 
+  async getSoftwaresCount() {
+    return await this.repository.getSoftwaresCount();
+  }
+
   async getSoftwares(params: SelectSoftwaresInput) {
     return await this.repository.getSoftwares(params);
   }

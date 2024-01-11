@@ -19,6 +19,10 @@ export class RoomsService {
     });
   }
 
+  async getRoomsCount() {
+    return await this.repository.getRoomsCount();
+  }
+
   async getRooms(params: SelectRoomsInput) {
     return await this.repository.getRooms(params);
   }

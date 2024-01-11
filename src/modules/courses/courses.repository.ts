@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Course, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/database/prisma.service';
 import { UpdateCourseInput } from './dto/update-course.input';
+import { CoursesCount } from './courses-count.model';
 
 
 
@@ -23,6 +24,11 @@ export class CoursesRepository {
         _count: true,
       }
     })
+  }
+
+  async getCoursesCount(): Promise<CoursesCount> {
+    const count = await this.prisma.course.count();
+    return { count };
   }
 
   async getCourses(params: {

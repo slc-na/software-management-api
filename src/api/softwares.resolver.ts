@@ -7,10 +7,16 @@ import { SelectSoftwaresInput } from "src/modules/softwares/dto/select-softwares
 import { UpdateSoftwareInput } from "src/modules/softwares/dto/update-software.input";
 import { Software } from "src/modules/softwares/softwares.model";
 import { SoftwaresService } from "src/modules/softwares/softwares.service";
+import { SoftwaresCount } from "src/modules/softwares/sotftwares-count.model";
 
 @Resolver()
 export class SoftwaresResolver {
   constructor(private readonly softwaresService: SoftwaresService) {}
+
+  @Query(() => SoftwaresCount)
+  async getSoftwaresCount() {
+    return this.softwaresService.getSoftwaresCount();
+  }
 
   @Query(() => [Software])
   async getSoftwares(@Args('selectSoftwaresInput') selectSoftwaresInput: SelectSoftwaresInput) {

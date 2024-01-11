@@ -1,4 +1,4 @@
-import { Field, GraphQLISODateTime, ObjectType } from "@nestjs/graphql";
+import { Field, GraphQLISODateTime, Int, ObjectType } from "@nestjs/graphql";
 import { Course as CourseDB } from "@prisma/client"
 import { SoftwareCourse } from "../software-courses/software-courses.model";
 import { Department } from "../departments/departments.model";
@@ -16,5 +16,4 @@ export class Course {
   @Field(() => GraphQLISODateTime) createdAt: CourseDB['createdAt'];
   @Field(() => GraphQLISODateTime) updatedAt: CourseDB['updatedAt'];
   @Field(() => [SoftwareCourse]) softwareCourses: SoftwareCourse[];
-  
 }

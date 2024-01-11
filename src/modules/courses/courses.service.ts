@@ -30,6 +30,10 @@ export class CoursesService {
     });
   }
 
+  async getCoursesCount() {
+    return await this.repository.getCoursesCount();
+  }
+
   async getCourses(params: SelectCoursesInput) {
     return await this.repository.getCourses(params);
   }

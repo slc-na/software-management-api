@@ -1,5 +1,6 @@
-import { Args, Mutation, Query } from "@nestjs/graphql";
+import { Args, Int, Mutation, Query } from "@nestjs/graphql";
 import { Resolver } from "@nestjs/graphql";
+import { CoursesCount } from "src/modules/courses/courses-count.model";
 import { Course } from "src/modules/courses/courses.model";
 import { CoursesService } from "src/modules/courses/courses.service";
 import { CreateCourseInput } from "src/modules/courses/dto/create-course.input";
@@ -11,6 +12,11 @@ import { UpdateCourseInput } from "src/modules/courses/dto/update-course.input";
 @Resolver()
 export class CoursesResolver {
   constructor(private readonly coursesService: CoursesService) {}
+
+  @Query(() => CoursesCount)
+  async getCoursesCount() {
+    return this.coursesService.getCoursesCount();
+  }
 
   @Query(() => [Course])
   async getCourses(@Args('selectCoursesInput') selectCoursesInput: SelectCoursesInput) {

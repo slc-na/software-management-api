@@ -5,12 +5,18 @@ import { DeleteRoomInput } from "src/modules/rooms/dto/delete-room.input";
 import { SelectRoomByIdInput } from "src/modules/rooms/dto/select-room-by-id.input";
 import { SelectRoomsInput } from "src/modules/rooms/dto/select-rooms.input";
 import { UpdateRoomInput } from "src/modules/rooms/dto/update-room.input";
+import { RoomsCount } from "src/modules/rooms/rooms-count.model";
 import { Room } from "src/modules/rooms/rooms.model";
 import { RoomsService } from "src/modules/rooms/rooms.service";
 
 @Resolver()
 export class RoomsResolver {
   constructor(private readonly roomsService: RoomsService) {}
+
+  @Query(() => RoomsCount)
+  async getRoomsCount() {
+    return this.roomsService.getRoomsCount();
+  }
 
   @Query(() => [Room])
   async getRooms(@Args('selectRoomsInput') selectRoomsInput: SelectRoomsInput) {

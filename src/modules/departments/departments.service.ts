@@ -19,6 +19,10 @@ export class DepartmentsService {
     });
   }
 
+  async getDepartmentsCount() {
+    return await this.repository.getDepartmentsCount();
+  }
+
   async getDepartments(params: SelectDepartmentsInput) {
     return await this.repository.getDepartments(params);
   }

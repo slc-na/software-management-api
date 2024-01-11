@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Software, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/database/prisma.service';
 import { UpdateSoftwareInput } from './dto/update-software.input';
+import { SoftwaresCount } from './sotftwares-count.model';
 
 @Injectable()
 export class SoftwaresRepository {
@@ -21,6 +22,11 @@ export class SoftwaresRepository {
         _count: true
       }
     })
+  }
+
+  async getSoftwaresCount(): Promise<SoftwaresCount> {
+    const count = await this.prisma.software.count();
+    return { count };
   }
 
   async getSoftwares(params: {

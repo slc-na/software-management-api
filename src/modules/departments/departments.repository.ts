@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Department, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/database/prisma.service';
 import { UpdateDepartmentInput } from './dto/update-department.input';
+import { DepartmentsCount } from './departments-count.model';
 
 @Injectable()
 export class DepartmentsRepository {
@@ -18,6 +19,11 @@ export class DepartmentsRepository {
         _count: true
       }
     })
+  }
+
+  async getDepartmentsCount(): Promise<DepartmentsCount> {
+    const count = await this.prisma.department.count();
+    return { count };
   }
 
   async getDepartments(params: {
