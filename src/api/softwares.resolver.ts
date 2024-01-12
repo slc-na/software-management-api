@@ -9,6 +9,7 @@ import { Software } from "src/modules/softwares/softwares.model";
 import { SoftwaresService } from "src/modules/softwares/softwares.service";
 import { SoftwaresCount } from "src/modules/softwares/softwares-count.model";
 import { SearchSoftwaresInput } from "src/modules/softwares/dto/search-softwares.input";
+import { SearchSoftwaresResult } from "src/modules/softwares/search-softwares-result.model";
 
 @Resolver()
 export class SoftwaresResolver {
@@ -29,7 +30,7 @@ export class SoftwaresResolver {
     return this.softwaresService.getSoftwareById(selectSoftwareByIdInput);
   }
 
-  @Query(() => SearchSoftwaresInput)
+  @Query(() => SearchSoftwaresResult)
   async searchSoftwares(@Args('searchSoftwaresInput') searchSoftwaresInput: SearchSoftwaresInput) {
     return this.softwaresService.searchSoftwares(searchSoftwaresInput);
   }
