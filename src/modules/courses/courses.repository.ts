@@ -4,6 +4,7 @@ import { PrismaService } from 'src/database/prisma.service';
 import { UpdateCourseInput } from './dto/update-course.input';
 import { CoursesCount } from './courses-count.model';
 import { SearchCoursesInput } from './dto/search-courses.input';
+import { SelectCoursesInput } from './dto/select-courses.input';
 
 
 
@@ -32,27 +33,36 @@ export class CoursesRepository {
     return { count };
   }
 
-  async getCourses(params: {
-    skip?: number,
-    take?: number,
-    cursor?: Prisma.CourseWhereUniqueInput,
-    where?: Prisma.CourseWhereInput,
-    orderBy?: Prisma.CourseOrderByWithRelationInput,
-  }): Promise<Course[]> {
-    const { skip, take, cursor, where, orderBy } = params;
-    return this.prisma.course.findMany({ 
-      skip, 
-      take, 
-      cursor, 
-      where, 
-      orderBy,
+  async getCourses(selectCoursesInput: SelectCoursesInput): Promise<Course[]> {
+    const { search, orderBy, orderDirection, skip, take } = selectCoursesInput;
+
+    const where: Prisma.CourseWhereInput = search
+    ? {
+        OR: [
+          { code: { contains: search, mode: 'insensitive' } },
+          { name: { contains: search, mode: 'insensitive' } },
+        ],
+      }
+    : {};
+
+    const courses = await this.prisma.course.findMany({
+      where,
+      orderBy: orderBy
+        ? {
+            [orderBy]: orderDirection || 'asc',
+          }
+        : undefined,
+      skip,
+      take,
       include: {
         department: true,
         internetUsageType: true,
         softwareCourses: true,
         _count: true,
-      }
+      },
     });
+
+    return courses;
   }
 
   async getCourseById(params: {
