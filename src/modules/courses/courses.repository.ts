@@ -3,6 +3,7 @@ import { Course, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/database/prisma.service';
 import { UpdateCourseInput } from './dto/update-course.input';
 import { CoursesCount } from './courses-count.model';
+import { SearchCoursesInput } from './dto/search-courses.input';
 
 
 
@@ -68,6 +69,28 @@ export class CoursesRepository {
       }
     })
   }
+
+  async searchCourses(params: SearchCoursesInput): Promise<{ courses: Course[]; count: number }> {
+    const courses = await this.prisma.course.findMany({
+      where: {
+        OR: [
+          { code: { contains: params.query, mode: 'insensitive' } },
+          { name: { contains: params.query, mode: 'insensitive' } },
+        ],
+      },
+      include: {
+        department: true,
+        internetUsageType: true,
+        softwareCourses: true,
+        _count: true,
+      },
+    });
+
+    const count = courses.length;
+
+    return { courses, count };
+  }
+
 
   async updateCourse(params: UpdateCourseInput): Promise<Course> {
     const { id, code, name, departmentId, internetUsageTypeId } = params;

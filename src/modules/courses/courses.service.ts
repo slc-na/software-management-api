@@ -5,6 +5,7 @@ import { SelectCourseByIdInput } from "./dto/select-course-by-id.input";
 import { UpdateCourseInput } from "./dto/update-course.input";
 import { DeleteCourseInput } from "./dto/delete-course.input";
 import { SelectCoursesInput } from "./dto/select-courses.input";
+import { SearchCoursesInput } from "./dto/search-courses.input";
 
 @Injectable()
 export class CoursesService {
@@ -36,6 +37,10 @@ export class CoursesService {
 
   async getCourses(params: SelectCoursesInput) {
     return await this.repository.getCourses(params);
+  }
+  
+  async searchCourses(params: SearchCoursesInput) {
+    return await this.repository.searchCourses(params);
   }
 
   async getCourseById(params: SelectCourseByIdInput) {
