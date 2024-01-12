@@ -5,6 +5,7 @@ import { SelectSoftwareByIdInput } from "./dto/select-software-by-id.input";
 import { UpdateSoftwareInput } from "./dto/update-software.input";
 import { DeleteSoftwareInput } from "./dto/delete-software.input";
 import { SelectSoftwaresInput } from "./dto/select-softwares.input";
+import { SearchSoftwaresInput } from "./dto/search-softwares.input";
 
 @Injectable()
 export class SoftwaresService {
@@ -39,6 +40,10 @@ export class SoftwaresService {
         id: params.id
       },
     });
+  }
+
+  async searchSoftwares(params: SearchSoftwaresInput) {
+    return this.repository.searchSoftwares(params);
   }
 
   async updateSoftware(params: UpdateSoftwareInput) {

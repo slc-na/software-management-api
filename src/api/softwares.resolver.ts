@@ -7,7 +7,8 @@ import { SelectSoftwaresInput } from "src/modules/softwares/dto/select-softwares
 import { UpdateSoftwareInput } from "src/modules/softwares/dto/update-software.input";
 import { Software } from "src/modules/softwares/softwares.model";
 import { SoftwaresService } from "src/modules/softwares/softwares.service";
-import { SoftwaresCount } from "src/modules/softwares/sotftwares-count.model";
+import { SoftwaresCount } from "src/modules/softwares/softwares-count.model";
+import { SearchSoftwaresInput } from "src/modules/softwares/dto/search-softwares.input";
 
 @Resolver()
 export class SoftwaresResolver {
@@ -26,6 +27,11 @@ export class SoftwaresResolver {
   @Query(() => Software)
   async getSoftwareById(@Args('selectSoftwareByIdInput') selectSoftwareByIdInput: SelectSoftwareByIdInput) {
     return this.softwaresService.getSoftwareById(selectSoftwareByIdInput);
+  }
+
+  @Query(() => SearchSoftwaresInput)
+  async searchSoftwares(@Args('searchSoftwaresInput') searchSoftwaresInput: SearchSoftwaresInput) {
+    return this.softwaresService.searchSoftwares(searchSoftwaresInput);
   }
 
   @Mutation(() => Software)

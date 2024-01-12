@@ -3,6 +3,7 @@ import { Department, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/database/prisma.service';
 import { UpdateDepartmentInput } from './dto/update-department.input';
 import { DepartmentsCount } from './departments-count.model';
+import { SearchDepartmentsInput } from './dto/search-departments.input';
 
 @Injectable()
 export class DepartmentsRepository {
@@ -58,6 +59,24 @@ export class DepartmentsRepository {
         _count: true,
       }
     })
+  }
+
+  async searchDepartments(params: SearchDepartmentsInput): Promise<{ departments: Department[]; count: number }> {
+    const departments = await this.prisma.department.findMany({
+      where: {
+        OR: [
+          { name: { contains: params.query, mode: 'insensitive' } },
+        ],
+      },
+      include: {
+        courses: true,
+        _count: true,
+      }
+    });
+
+    const count = departments.length;
+
+    return { departments, count };
   }
 
   async updateDepartment(params: UpdateDepartmentInput): Promise<Department> {

@@ -2,7 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { Software, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/database/prisma.service';
 import { UpdateSoftwareInput } from './dto/update-software.input';
-import { SoftwaresCount } from './sotftwares-count.model';
+import { SoftwaresCount } from './softwares-count.model';
+import { SearchSoftwaresInput } from './dto/search-softwares.input';
 
 @Injectable()
 export class SoftwaresRepository {
@@ -67,6 +68,27 @@ export class SoftwaresRepository {
         _count: true
       }
     })
+  }
+
+  async searchSoftwares(params: SearchSoftwaresInput): Promise<{ softwares: Software[]; count: number }> {
+    const softwares = await this.prisma.software.findMany({
+      where: {
+        OR: [
+          { name: { contains: params.query, mode: 'insensitive' } },
+        ],
+      },
+      include: {
+        softwareCourses: true,
+        softwareGroups: true,
+        softwareMasters: true,
+        softwareOnRooms: true,
+        _count: true
+      }
+    });
+
+    const count = softwares.length;
+
+    return { softwares, count };
   }
 
   async updateSoftware(params: UpdateSoftwareInput): Promise<Software> {

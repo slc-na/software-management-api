@@ -5,9 +5,11 @@ import { Department } from "src/modules/departments/departments.model";
 import { DepartmentsService } from "src/modules/departments/departments.service";
 import { CreateDepartmentInput } from "src/modules/departments/dto/create-department.input";
 import { DeleteDepartmentInput } from "src/modules/departments/dto/delete-department.input";
+import { SearchDepartmentsInput } from "src/modules/departments/dto/search-departments.input";
 import { SelectDepartmentByIdInput } from "src/modules/departments/dto/select-department-by-id.input";
 import { SelectDepartmentsInput } from "src/modules/departments/dto/select-departments.input";
 import { UpdateDepartmentInput } from "src/modules/departments/dto/update-department.input";
+import { SearchDepartmentsResult } from "src/modules/departments/search-departments-result.model";
 
 @Resolver()
 export class DepartmentsResolver {
@@ -26,6 +28,11 @@ export class DepartmentsResolver {
   @Query(() => Department)
   async getDepartmentById(@Args('selectDepartmentByIdInput') selectDepartmentByIdInput: SelectDepartmentByIdInput) {
     return this.departmentsService.getDepartmentById(selectDepartmentByIdInput);
+  }
+
+  @Query(() => SearchDepartmentsResult)
+  async searchDepartments(@Args('searchDepartmentsInput') searchDepartmentsInput: SearchDepartmentsInput) {
+    return this.departmentsService.searchDepartments(searchDepartmentsInput);
   }
 
   @Mutation(() => Department)

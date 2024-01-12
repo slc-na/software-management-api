@@ -3,6 +3,7 @@ import { Room, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/database/prisma.service';
 import { UpdateRoomInput } from './dto/update-room.input';
 import { RoomsCount } from './rooms-count.model';
+import { SearchRoomsInput } from './dto/search-rooms.input';
 
 @Injectable()
 export class RoomsRepository {
@@ -61,6 +62,25 @@ export class RoomsRepository {
         _count: true,
       }
     })
+  }
+
+  async searchRooms(params: SearchRoomsInput): Promise<{ rooms: Room[]; count: number }> {
+    const rooms = await this.prisma.room.findMany({
+      where: {
+        OR: [
+          { name: { contains: params.query, mode: 'insensitive' } },
+        ],
+      },
+      include: {
+        masterOnRooms: true,
+        softwareOnRooms: true,
+        _count: true,
+      },
+    });
+
+    const count = rooms.length;
+
+    return { rooms, count };
   }
 
   async updateRoom(params: UpdateRoomInput): Promise<Room> {

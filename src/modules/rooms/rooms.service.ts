@@ -5,6 +5,7 @@ import { SelectRoomByIdInput } from "./dto/select-room-by-id.input";
 import { UpdateRoomInput } from "./dto/update-room.input";
 import { DeleteRoomInput } from "./dto/delete-room.input";
 import { SelectRoomsInput } from "./dto/select-rooms.input";
+import { SearchRoomsInput } from "./dto/search-rooms.input";
 
 @Injectable()
 export class RoomsService {
@@ -32,6 +33,11 @@ export class RoomsService {
       where: params
     });
   }
+
+  async searchRooms(params: SearchRoomsInput) {
+    return this.repository.searchRooms(params);
+  }
+
 
   async updateRoom(params: UpdateRoomInput) {
     return this.repository.updateRoom(params);
