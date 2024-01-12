@@ -4,6 +4,7 @@ import { PrismaService } from 'src/database/prisma.service';
 import { UpdateSoftwareInput } from './dto/update-software.input';
 import { SoftwaresCount } from './softwares-count.model';
 import { SearchSoftwaresInput } from './dto/search-softwares.input';
+import { SelectSoftwaresInput } from './dto/select-softwares.input';
 
 @Injectable()
 export class SoftwaresRepository {
@@ -30,28 +31,36 @@ export class SoftwaresRepository {
     return { count };
   }
 
-  async getSoftwares(params: {
-    skip?: number,
-    take?: number,
-    cursor?: Prisma.SoftwareWhereUniqueInput,
-    where?: Prisma.SoftwareWhereInput,
-    orderBy?: Prisma.SoftwareOrderByWithRelationInput,
-  }): Promise<Software[]> {
-    const { skip, take, cursor, where, orderBy } = params;
-    return this.prisma.software.findMany({
+  async getSoftwares(selectSoftwaresInput: SelectSoftwaresInput): Promise<Software[]> {
+    const { search, orderBy, orderDirection, skip, take } = selectSoftwaresInput;
+
+    const where: Prisma.SoftwareWhereInput = search
+      ? {
+          OR: [
+            { name: { contains: search, mode: 'insensitive' } },
+          ],
+        }
+      : {};
+
+    const softwares = await this.prisma.software.findMany({
+      where: where,
+      orderBy: orderBy
+        ? {
+            [orderBy]: orderDirection || 'asc', // Default to 'asc' if orderDirection is not provided
+          }
+        : undefined,
       skip,
       take,
-      cursor,
-      where,
-      orderBy,
       include: {
         softwareCourses: true,
         softwareGroups: true,
         softwareMasters: true,
         softwareOnRooms: true,
-        _count: true
-      }
+        _count: true,
+      },
     });
+
+    return softwares;
   }
 
   async getSoftwareById(params: {

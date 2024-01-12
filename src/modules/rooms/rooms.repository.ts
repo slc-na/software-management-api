@@ -3,6 +3,7 @@ import { Room, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/database/prisma.service';
 import { UpdateRoomInput } from './dto/update-room.input';
 import { RoomsCount } from './rooms-count.model';
+import { SelectRoomsInput } from './dto/select-rooms.input';
 import { SearchRoomsInput } from './dto/search-rooms.input';
 
 @Injectable()
@@ -28,26 +29,35 @@ export class RoomsRepository {
     return { count };
   }
 
-  async getRooms(params: {
-    skip?: number,
-    take?: number,
-    cursor?: Prisma.RoomWhereUniqueInput,
-    where?: Prisma.RoomWhereInput,
-    orderBy?: Prisma.RoomOrderByWithRelationInput,
-  }): Promise<Room[]> {
-    const { skip, take, cursor, where, orderBy } = params;
-    return this.prisma.room.findMany({ 
-      skip, 
-      take, 
-      cursor, 
-      where, 
-      orderBy,
+  async getRooms(selectRoomsInput: SelectRoomsInput): Promise<Room[]> {
+    const { search, orderBy, orderDirection, skip, take } = selectRoomsInput;
+
+    const where: Prisma.RoomWhereInput = search
+      ? {
+          OR: [
+            { name: { contains: search, mode: 'insensitive' } },
+            // Add more fields to search if needed
+          ],
+        }
+      : {};
+
+    const rooms = await this.prisma.room.findMany({
+      where: where, 
+      orderBy: orderBy
+        ? {
+            [orderBy]: orderDirection || 'asc', // Default to 'asc' if orderDirection is not provided
+          }
+        : undefined,
+      skip,
+      take,
       include: {
         masterOnRooms: true,
         softwareOnRooms: true,
         _count: true,
-      }
+      },
     });
+
+    return rooms;
   }
 
   async getRoomById(params: {

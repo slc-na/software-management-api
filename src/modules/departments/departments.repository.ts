@@ -4,6 +4,7 @@ import { PrismaService } from 'src/database/prisma.service';
 import { UpdateDepartmentInput } from './dto/update-department.input';
 import { DepartmentsCount } from './departments-count.model';
 import { SearchDepartmentsInput } from './dto/search-departments.input';
+import { SelectDepartmentsInput } from './dto/select-departments.input';
 
 @Injectable()
 export class DepartmentsRepository {
@@ -27,25 +28,34 @@ export class DepartmentsRepository {
     return { count };
   }
 
-  async getDepartments(params: {
-    skip?: number,
-    take?: number,
-    cursor?: Prisma.DepartmentWhereUniqueInput,
-    where?: Prisma.DepartmentWhereInput,
-    orderBy?: Prisma.DepartmentOrderByWithRelationInput,
-  }): Promise<Department[]> {
-    const { skip, take, cursor, where, orderBy } = params;
-    return this.prisma.department.findMany({ 
-      skip, 
-      take, 
-      cursor, 
-      where, 
-      orderBy,
+  async getDepartments(selectDepartmentsInput: SelectDepartmentsInput): Promise<Department[]> {
+    const { search, orderBy, orderDirection, skip, take } = selectDepartmentsInput;
+
+    const where: Prisma.DepartmentWhereInput = search
+      ? {
+          OR: [
+            { name: { contains: search, mode: 'insensitive' } },
+            // Add more fields to search if needed
+          ],
+        }
+      : {};
+
+    const departments = await this.prisma.department.findMany({
+      where: where, // Ensure that where is always an array
+      orderBy: orderBy
+        ? {
+            [orderBy]: orderDirection || 'asc', // Default to 'asc' if orderDirection is not provided
+          }
+        : undefined,
+      skip,
+      take,
       include: {
         courses: true,
-        _count: true
-      }
+        _count: true,
+      },
     });
+
+    return departments;
   }
 
   async getDepartmentById(params: {
