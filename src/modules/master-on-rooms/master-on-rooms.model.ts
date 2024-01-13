@@ -1,6 +1,6 @@
 import { Field, GraphQLISODateTime, ObjectType } from "@nestjs/graphql";
 import { MasterOnRoom as MasterOnRoomDB } from "@prisma/client";
-import { Master } from "../Masters/Masters.model";
+import { Master } from "../masters/masters.model";
 import { Room } from "../rooms/rooms.model";
 import { Semester } from "../semesters/semesters.model";
 

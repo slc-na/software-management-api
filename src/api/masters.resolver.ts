@@ -1,6 +1,6 @@
 import { Args, Mutation, Query } from "@nestjs/graphql";
 import { Resolver } from "@nestjs/graphql";
-import { Master } from "src/modules/Masters/Masters.model";
+import { Master } from "src/modules/masters/masters.model";
 import { CreateMasterInput } from "src/modules/masters/dto/create-master.input";
 import { DeleteMasterInput } from "src/modules/masters/dto/delete-master.input";
 import { SelectMasterByIdInput } from "src/modules/masters/dto/select-master-by-id.input";

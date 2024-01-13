@@ -1,7 +1,7 @@
 import { Field, GraphQLISODateTime, ObjectType } from "@nestjs/graphql";
 import { SoftwareMaster as SoftwareMasterDB } from "@prisma/client";
 import { Software } from "../softwares/softwares.model";
-import { Master } from "../Masters/Masters.model";
+import { Master } from "../masters/masters.model";
 
 @ObjectType()
 export class SoftwareMaster {
