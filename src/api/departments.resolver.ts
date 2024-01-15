@@ -1,6 +1,7 @@
 import { Args, Mutation, Query } from "@nestjs/graphql";
 import { Resolver } from "@nestjs/graphql";
 import { DepartmentsCount } from "src/modules/departments/departments-count.model";
+import { DepartmentsWithCount } from "src/modules/departments/departments-with-count.model";
 import { Department } from "src/modules/departments/departments.model";
 import { DepartmentsService } from "src/modules/departments/departments.service";
 import { CreateDepartmentInput } from "src/modules/departments/dto/create-department.input";
@@ -20,7 +21,7 @@ export class DepartmentsResolver {
     return this.departmentsService.getDepartmentsCount();
   }
 
-  @Query(() => [Department])
+  @Query(() => DepartmentsWithCount)
   async getDepartments(@Args('selectDepartmentsInput') selectDepartmentsInput: SelectDepartmentsInput) {
     return this.departmentsService.getDepartments(selectDepartmentsInput);
   }

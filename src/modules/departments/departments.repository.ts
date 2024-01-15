@@ -28,7 +28,7 @@ export class DepartmentsRepository {
     return { count };
   }
 
-  async getDepartments(selectDepartmentsInput: SelectDepartmentsInput): Promise<Department[]> {
+  async getDepartments(selectDepartmentsInput: SelectDepartmentsInput): Promise<{ departments: Department[]; count: number }> {
     const { search, orderBy, orderDirection, skip, take } = selectDepartmentsInput;
 
     const where: Prisma.DepartmentWhereInput = search
@@ -55,7 +55,9 @@ export class DepartmentsRepository {
       },
     });
 
-    return departments;
+    const count = departments.length;
+
+    return {departments, count};
   }
 
   async getDepartmentById(params: {

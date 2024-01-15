@@ -10,6 +10,7 @@ import { SoftwaresService } from "src/modules/softwares/softwares.service";
 import { SoftwaresCount } from "src/modules/softwares/softwares-count.model";
 import { SearchSoftwaresInput } from "src/modules/softwares/dto/search-softwares.input";
 import { SearchSoftwaresResult } from "src/modules/softwares/search-softwares-result.model";
+import { SoftwaresWithCount } from "src/modules/softwares/softwares-with-count.model";
 
 @Resolver()
 export class SoftwaresResolver {
@@ -20,7 +21,7 @@ export class SoftwaresResolver {
     return this.softwaresService.getSoftwaresCount();
   }
 
-  @Query(() => [Software])
+  @Query(() => SoftwaresWithCount)
   async getSoftwares(@Args('selectSoftwaresInput') selectSoftwaresInput: SelectSoftwaresInput) {
     return this.softwaresService.getSoftwares(selectSoftwaresInput);
   }

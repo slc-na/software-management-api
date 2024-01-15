@@ -33,7 +33,7 @@ export class CoursesRepository {
     return { count };
   }
 
-  async getCourses(selectCoursesInput: SelectCoursesInput): Promise<Course[]> {
+  async getCourses(selectCoursesInput: SelectCoursesInput): Promise<{ courses: Course[]; count: number }> {
     const { search, orderBy, orderDirection, skip, take } = selectCoursesInput;
 
     const where: Prisma.CourseWhereInput = search
@@ -62,7 +62,9 @@ export class CoursesRepository {
       },
     });
 
-    return courses;
+    const count = courses.length;
+
+    return {courses, count};
   }
 
   async getCourseById(params: {

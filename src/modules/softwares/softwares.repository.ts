@@ -5,6 +5,7 @@ import { UpdateSoftwareInput } from './dto/update-software.input';
 import { SoftwaresCount } from './softwares-count.model';
 import { SearchSoftwaresInput } from './dto/search-softwares.input';
 import { SelectSoftwaresInput } from './dto/select-softwares.input';
+import { SoftwaresWithCount } from './softwares-with-count.model';
 
 @Injectable()
 export class SoftwaresRepository {
@@ -31,7 +32,7 @@ export class SoftwaresRepository {
     return { count };
   }
 
-  async getSoftwares(selectSoftwaresInput: SelectSoftwaresInput): Promise<Software[]> {
+  async getSoftwares(selectSoftwaresInput: SelectSoftwaresInput): Promise<{ softwares: Software[]; count: number }> {
     const { search, orderBy, orderDirection, skip, take } = selectSoftwaresInput;
 
     const where: Prisma.SoftwareWhereInput = search
@@ -60,7 +61,8 @@ export class SoftwaresRepository {
       },
     });
 
-    return softwares;
+    const count = softwares.length;
+    return {softwares, count};
   }
 
   async getSoftwareById(params: {

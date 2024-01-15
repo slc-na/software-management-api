@@ -29,7 +29,7 @@ export class RoomsRepository {
     return { count };
   }
 
-  async getRooms(selectRoomsInput: SelectRoomsInput): Promise<Room[]> {
+  async getRooms(selectRoomsInput: SelectRoomsInput): Promise<{ rooms: Room[]; count: number }> {
     const { search, orderBy, orderDirection, skip, take } = selectRoomsInput;
 
     const where: Prisma.RoomWhereInput = search
@@ -57,7 +57,9 @@ export class RoomsRepository {
       },
     });
 
-    return rooms;
+    const count = rooms.length;
+
+    return {rooms, count};
   }
 
   async getRoomById(params: {

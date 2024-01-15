@@ -7,6 +7,7 @@ import { SelectRoomByIdInput } from "src/modules/rooms/dto/select-room-by-id.inp
 import { SelectRoomsInput } from "src/modules/rooms/dto/select-rooms.input";
 import { UpdateRoomInput } from "src/modules/rooms/dto/update-room.input";
 import { RoomsCount } from "src/modules/rooms/rooms-count.model";
+import { RoomsWithCount } from "src/modules/rooms/rooms-with-count.model";
 import { Room } from "src/modules/rooms/rooms.model";
 import { RoomsService } from "src/modules/rooms/rooms.service";
 import { SearchRoomsResult } from "src/modules/rooms/search-rooms-result.model";
@@ -20,7 +21,7 @@ export class RoomsResolver {
     return this.roomsService.getRoomsCount();
   }
 
-  @Query(() => [Room])
+  @Query(() => RoomsWithCount)
   async getRooms(@Args('selectRoomsInput') selectRoomsInput: SelectRoomsInput) {
     return this.roomsService.getRooms(selectRoomsInput);
   }
