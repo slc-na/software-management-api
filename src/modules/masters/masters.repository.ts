@@ -37,7 +37,13 @@ export class MastersRepository {
       orderBy,
       include: {
         softwareMasters: true,
-        masterOnRooms: true,
+        masterOnRooms: {
+          include: {
+            master: true,
+            room: true,
+            semester: true,
+          }
+        },
         _count: true,
       }
     });

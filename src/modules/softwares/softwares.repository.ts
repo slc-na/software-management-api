@@ -33,15 +33,29 @@ export class SoftwaresRepository {
   }
 
   async getSoftwares(selectSoftwaresInput: SelectSoftwaresInput): Promise<{ softwares: Software[]; count: number }> {
-    const { search, orderBy, orderDirection, skip, take } = selectSoftwaresInput;
+    const { search, orderBy, orderDirection, skip, take, semesterId, orderProperty } = selectSoftwaresInput;
 
-    const where: Prisma.SoftwareWhereInput = search
-      ? {
-          OR: [
-            { name: { contains: search, mode: 'insensitive' } },
-          ],
-        }
-      : {};
+    const where: Prisma.SoftwareWhereInput = 
+      {
+        AND: [ 
+          search
+            ? {
+                OR: [
+                  { name: { contains: search, mode: 'insensitive' } },
+                ],
+              }
+            : {}, 
+          semesterId ? { 
+            softwareCourses: {
+              some: {
+                semester: {
+                  id: semesterId,
+                },
+              },
+            },
+          } : {}, 
+        ],
+      };
 
       const software_query = await this.prisma.software.findMany({
         where,
@@ -49,11 +63,13 @@ export class SoftwaresRepository {
 
     const softwares = await this.prisma.software.findMany({
       where: where,
-      orderBy: orderBy
-        ? {
-            [orderBy]: orderDirection || 'asc', // Default to 'asc' if orderDirection is not provided
+      orderBy: orderBy ?
+        orderProperty
+          ? {
+            [orderBy]: {[orderProperty] : orderDirection || 'asc'},
           }
-        : undefined,
+        : {[orderBy] : orderDirection || 'asc'}:
+        undefined,
       skip,
       take,
       include: {

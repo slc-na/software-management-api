@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Semester, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/database/prisma.service';
 import { UpdateSemesterInput } from './dto/update-semester.input';
+import { SelectSemesterInput } from './dto/select.semester.input';
 
 @Injectable()
 export class SemestersRepository {
@@ -22,23 +23,20 @@ export class SemestersRepository {
     })
   }
 
-  async getSemesters(params: {
-    skip?: number,
-    take?: number,
-    cursor?: Prisma.SemesterWhereUniqueInput,
-    where?: Prisma.SemesterWhereInput,
-    orderBy?: Prisma.SemesterOrderByWithRelationInput,
-  }): Promise<Semester[]> {
-    const { skip, take, cursor, where, orderBy } = params;
+  async getSemesters(): Promise<Semester[]> {
     return this.prisma.semester.findMany({ 
-      skip, 
-      take, 
-      cursor, 
-      where, 
-      orderBy,
+      orderBy: {
+        createdAt : 'desc'
+      },
       include: {
         masterOnRooms: true,
-        softwareCourses: true,
+        softwareCourses: {
+          include:{
+            course:true,
+            semester:true,
+            software:true
+          }
+        },
         softwareOnRooms: true,
         _count: true,
       }

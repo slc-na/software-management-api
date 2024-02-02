@@ -37,8 +37,8 @@ export class SoftwareOnRoomsRepository {
       orderBy,
       include: {
         software: true,
-        room: true,
         semester: true,
+        room: true,
       }
     });
   }

@@ -30,16 +30,28 @@ export class RoomsRepository {
   }
 
   async getRooms(selectRoomsInput: SelectRoomsInput): Promise<{ rooms: Room[]; count: number }> {
-    const { search, orderBy, orderDirection, skip, take } = selectRoomsInput;
+    const { search, orderBy, orderDirection, skip, take, semesterId, orderProperty } = selectRoomsInput;
 
-    const where: Prisma.RoomWhereInput = search
-      ? {
-          OR: [
-            { name: { contains: search, mode: 'insensitive' } },
-            // Add more fields to search if needed
-          ],
-        }
-      : {};
+    const where: Prisma.RoomWhereInput = {
+        AND: [ 
+          search
+            ? {
+                OR: [
+                  { name: { contains: search, mode: 'insensitive' } },
+                ],
+              }
+            : {}, 
+          semesterId ? { 
+            masterOnRooms: {
+              some: {
+                semester: {
+                  id: semesterId,
+                },
+              },
+            },
+          } : {}, 
+        ],
+      };
 
     const room_query = await this.prisma.room.findMany({
       where,
@@ -47,16 +59,30 @@ export class RoomsRepository {
 
     const rooms = await this.prisma.room.findMany({
       where: where, 
-      orderBy: orderBy
-        ? {
-            [orderBy]: orderDirection || 'asc', // Default to 'asc' if orderDirection is not provided
-          }
-        : undefined,
       skip,
       take,
+      orderBy: orderBy && !orderProperty 
+        ? { [orderBy] : orderDirection || 'asc' } : {},
       include: {
-        masterOnRooms: true,
-        softwareOnRooms: true,
+        masterOnRooms: {
+          include:{
+            master:true
+          },
+          orderBy: orderBy && orderProperty 
+                      ? { master : {[orderProperty] : orderDirection || 'asc'}, }
+                      : {},
+        },
+        softwareOnRooms: {
+          include:{
+            semester:true,
+            software:{
+              select:{
+                id:true
+              }
+            },
+            room:true,
+          }
+        },
         _count: true,
       },
     });

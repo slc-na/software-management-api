@@ -6,29 +6,14 @@ import { UpdateCourseInput } from "./dto/update-course.input";
 import { DeleteCourseInput } from "./dto/delete-course.input";
 import { SelectCoursesInput } from "./dto/select-courses.input";
 import { SearchCoursesInput } from "./dto/search-courses.input";
+import { CreateCourseInput } from "./dto/create-course.input";
 
 @Injectable()
 export class CoursesService {
   constructor(private repository: CoursesRepository) { }
 
-  async createCourse(params: { code: Course['code'], name: Course['name'], departmentId: Course['departmentId'], internetUsageTypeId: Course['internetUsageTypeId'] }) {
-    const { code, name, departmentId, internetUsageTypeId } = params;
-    return await this.repository.createCourse({
-      data: {
-        code,
-        name,
-        department: {
-          connect: {
-            id: departmentId
-          }
-        },
-        internetUsageType: {
-          connect: {
-            id: internetUsageTypeId
-          }
-        }
-      }
-    });
+  async createCourse(params: CreateCourseInput) {
+    return await this.repository.createCourse(params);
   }
 
   async getCoursesCount() {

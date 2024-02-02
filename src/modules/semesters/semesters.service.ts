@@ -4,6 +4,7 @@ import { SemestersRepository } from "./semesters.repository";
 import { SelectSemesterByIdInput } from "./dto/select-semester-by-id.input";
 import { UpdateSemesterInput } from "./dto/update-semester.input";
 import { DeleteSemesterInput } from "./dto/delete-semester.input";
+import { SelectSemesterInput } from "./dto/select.semester.input";
 
 @Injectable()
 export class SemestersService {
@@ -20,7 +21,7 @@ export class SemestersService {
   }
 
   async getSemesters() {
-    return await this.repository.getSemesters({});
+    return await this.repository.getSemesters();
   }
 
   async getSemesterById(params: SelectSemesterByIdInput) {

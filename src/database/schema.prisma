@@ -1,152 +1,152 @@
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
 }
 
 model Software {
-  id              String           @id @default(uuid())
-  name            String
-  version         String
-  license         String
-  numberOfLicense Int
-  currentLicense  String
-  installerPath   String
-  note            String?
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  softwareGroups  SoftwareGroup[]
-  softwareMasters SoftwareMaster[]
-  softwareCourses SoftwareCourse[]
-  softwareOnRooms SoftwareOnRoom[]
+    id              String           @id @default(uuid())
+    name            String
+    version         String
+    license         String
+    numberOfLicense Int
+    currentLicense  String
+    installerPath   String
+    note            String?
+    createdAt       DateTime         @default(now())
+    updatedAt       DateTime         @updatedAt
+    softwareGroups  SoftwareGroup[]
+    softwareMasters SoftwareMaster[]
+    softwareCourses SoftwareCourse[]
+    softwareOnRooms SoftwareOnRoom[]
 }
 
 model Group {
-  id             String          @id @default(uuid())
-  name           String
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
-  softwareGroups SoftwareGroup[]
+    id             String          @id @default(uuid())
+    name           String
+    createdAt      DateTime        @default(now())
+    updatedAt      DateTime        @updatedAt
+    softwareGroups SoftwareGroup[]
 }
 
 model SoftwareGroup {
-  software   Software @relation(fields: [softwareId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  softwareId String
-  group      Group    @relation(fields: [groupId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  groupId    String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+    software   Software @relation(fields: [softwareId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    softwareId String
+    group      Group    @relation(fields: [groupId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    groupId    String
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
 
-  @@id([softwareId, groupId])
+    @@id([softwareId, groupId])
 }
 
 model Master {
-  id              String           @id @default(uuid())
-  name            String
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  softwareMasters SoftwareMaster[]
-  masterOnRooms   MasterOnRoom[]
+    id              String           @id @default(uuid())
+    name            String
+    createdAt       DateTime         @default(now())
+    updatedAt       DateTime         @updatedAt
+    softwareMasters SoftwareMaster[]
+    masterOnRooms   MasterOnRoom[]
 }
 
 model SoftwareMaster {
-  software   Software @relation(fields: [softwareId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  softwareId String
-  master     Master   @relation(fields: [masterId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  masterId   String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+    software   Software @relation(fields: [softwareId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    softwareId String
+    master     Master   @relation(fields: [masterId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    masterId   String
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
 
-  @@id([softwareId, masterId])
+    @@id([softwareId, masterId])
 }
 
 model InternetUsageType {
-  id        String   @id @default(uuid())
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  courses   Course[]
+    id        String   @id @default(uuid())
+    name      String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    courses   Course[]
 }
 
 model Department {
-  id        String   @id @default(uuid())
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  courses   Course[]
+    id        String   @id @default(uuid())
+    name      String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    courses   Course[]
 }
 
 model Course {
-  id                  String            @id @default(uuid())
-  code                String
-  name                String
-  department          Department        @relation(fields: [departmentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  departmentId        String
-  internetUsageType   InternetUsageType @relation(fields: [internetUsageTypeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  internetUsageTypeId String
-  createdAt           DateTime          @default(now())
-  updatedAt           DateTime          @updatedAt
-  softwareCourses     SoftwareCourse[]
+    id                  String            @id @default(uuid())
+    code                String
+    name                String
+    department          Department        @relation(fields: [departmentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    departmentId        String
+    internetUsageType   InternetUsageType @relation(fields: [internetUsageTypeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    internetUsageTypeId String
+    createdAt           DateTime          @default(now())
+    updatedAt           DateTime          @updatedAt
+    softwareCourses     SoftwareCourse[]
 }
 
 model Semester {
-  id              String           @id @default(uuid())
-  name            String
-  isActive        Boolean
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  softwareCourses SoftwareCourse[]
-  softwareOnRooms SoftwareOnRoom[]
-  masterOnRooms   MasterOnRoom[]
+    id              String           @id @default(uuid())
+    name            String
+    isActive        Boolean
+    createdAt       DateTime         @default(now())
+    updatedAt       DateTime         @updatedAt
+    softwareCourses SoftwareCourse[]
+    softwareOnRooms SoftwareOnRoom[]
+    masterOnRooms   MasterOnRoom[]
 }
 
 model Room {
-  id              String           @id @default(uuid())
-  name            String
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  softwareOnRooms SoftwareOnRoom[]
-  masterOnRooms   MasterOnRoom[]
+    id              String           @id @default(uuid())
+    name            String
+    createdAt       DateTime         @default(now())
+    updatedAt       DateTime         @updatedAt
+    softwareOnRooms SoftwareOnRoom[]
+    masterOnRooms   MasterOnRoom[]
 }
 
 model SoftwareCourse {
-  software   Software @relation(fields: [softwareId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  softwareId String
-  course     Course   @relation(fields: [courseId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  courseId   String
-  semester   Semester @relation(fields: [semesterId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  semesterId String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+    software   Software @relation(fields: [softwareId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    softwareId String
+    course     Course   @relation(fields: [courseId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    courseId   String
+    semester   Semester @relation(fields: [semesterId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    semesterId String
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
 
-  @@id([softwareId, courseId, semesterId])
+    @@id([softwareId, courseId, semesterId])
 }
 
 model SoftwareOnRoom {
-  software   Software @relation(fields: [softwareId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  softwareId String
-  room       Room     @relation(fields: [roomId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  roomId     String
-  semester   Semester @relation(fields: [semesterId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  semesterId String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+    software   Software @relation(fields: [softwareId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    softwareId String
+    room       Room     @relation(fields: [roomId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    roomId     String
+    semester   Semester @relation(fields: [semesterId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    semesterId String
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
 
-  @@id([softwareId, roomId, semesterId])
+    @@id([softwareId, roomId, semesterId])
 }
 
 model MasterOnRoom {
-  master     Master   @relation(fields: [masterId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  masterId   String
-  room       Room     @relation(fields: [roomId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  roomId     String
-  semester   Semester @relation(fields: [semesterId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  semesterId String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+    master     Master   @relation(fields: [masterId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    masterId   String
+    room       Room     @relation(fields: [roomId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    roomId     String
+    semester   Semester @relation(fields: [semesterId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    semesterId String
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
 
-  @@id([masterId, roomId, semesterId])
+    @@id([masterId, roomId, semesterId])
 }

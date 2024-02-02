@@ -1,28 +1,54 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Course, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/database/prisma.service';
 import { UpdateCourseInput } from './dto/update-course.input';
 import { CoursesCount } from './courses-count.model';
 import { SearchCoursesInput } from './dto/search-courses.input';
 import { SelectCoursesInput } from './dto/select-courses.input';
+import { CreateCourseInput } from './dto/create-course.input';
 
 @Injectable()
 export class CoursesRepository {
   constructor(private prisma: PrismaService) { }
 
-  async createCourse(params: {
-    data: Prisma.CourseCreateInput
-  }): Promise<Course> {
-    const { data } = params;
-    return this.prisma.course.create({
-      data,
-      include: {
-        department: true,
-        internetUsageType: true,
-        softwareCourses: true,
-        _count: true,
+  async createCourse(params: CreateCourseInput): Promise<Course> {
+    const { code, departmentId, internetUsageTypeId, name, semesterId } = params;
+      return this.prisma.course.create({
+        data:{
+          code:code,
+          departmentId:departmentId,
+          internetUsageTypeId:internetUsageTypeId,
+          name:name
+        }
+      })
+  }
+
+  async updateCourse(params: UpdateCourseInput): Promise<Course> {
+    const { code, departmentId, internetUsageTypeId, name, newCode, newDepartmentId, newInternetUsageTypeId, newName, semesterId } = params;
+      
+    const result = await this.prisma.course.findFirst({
+      where:{
+        code:code,
+        departmentId:departmentId,
+        internetUsageTypeId:internetUsageTypeId,
+        name:name
       }
     })
+
+    if(result){
+      return this.prisma.course.update({
+        where:result,
+        data: {
+          code: newCode,
+          departmentId: newDepartmentId,
+          internetUsageTypeId: newInternetUsageTypeId,
+          name: newName
+        },
+      })
+    }else{
+      throw new HttpException("Data not found", HttpStatus.NOT_FOUND);
+    }
+
   }
 
   async getCoursesCount(): Promise<CoursesCount> {
@@ -31,34 +57,56 @@ export class CoursesRepository {
   }
 
   async getCourses(selectCoursesInput: SelectCoursesInput): Promise<{ courses: Course[]; count: number }> {
-    const { search, orderBy, orderDirection, skip, take } = selectCoursesInput;
+    const { search, orderBy, orderDirection, skip, take, orderProperty, semesterId } = selectCoursesInput;
 
-    const where: Prisma.CourseWhereInput = search
-      ? {
-        OR: [
-          { code: { contains: search, mode: 'insensitive' } },
-          { name: { contains: search, mode: 'insensitive' } },
-        ],
-      }
-      : {};
+    const where: Prisma.CourseWhereInput = {
+      AND: [ 
+        search
+          ? {
+              OR: [
+                { code: { contains: search, mode: 'insensitive' } },
+                { name: { contains: search, mode: 'insensitive' } },
+              ],
+            }
+          : {}, 
+        semesterId ? { 
+          softwareCourses: {
+            some: {
+              semester: {
+                id: semesterId,
+              },
+            },
+          },
+        } : {}, 
+      ],
+    };
 
     const course_query = await this.prisma.course.findMany({
       where,
     });
 
+    console.log(course_query);
+
+
     const courses = await this.prisma.course.findMany({
       where,
-      orderBy: orderBy
-        ? {
-          [orderBy]: orderDirection || 'asc',
-        }
-        : undefined,
+      orderBy: orderBy ?
+        orderProperty
+          ? {
+            [orderBy]: {[orderProperty] : orderDirection || 'asc'},
+          }
+        : {[orderBy] : orderDirection || 'asc'}:
+        undefined,
       skip,
       take,
       include: {
         department: true,
         internetUsageType: true,
-        softwareCourses: true,
+        softwareCourses: {
+          include:{
+            semester:true
+          }
+        },
         _count: true,
       },
     });
@@ -102,36 +150,6 @@ export class CoursesRepository {
     const count = courses.length;
 
     return { courses, count };
-  }
-
-
-  async updateCourse(params: UpdateCourseInput): Promise<Course> {
-    const { id, code, name, departmentId, internetUsageTypeId } = params;
-    return this.prisma.course.update({
-      where: {
-        id: id
-      },
-      data: {
-        code: code,
-        name: name,
-        department: {
-          connect: {
-            id: departmentId
-          }
-        },
-        internetUsageType: {
-          connect: {
-            id: internetUsageTypeId
-          }
-        },
-      },
-      include: {
-        department: true,
-        internetUsageType: true,
-        softwareCourses: true,
-        _count: true,
-      }
-    });
   }
 
   async deleteCourseById(params: {

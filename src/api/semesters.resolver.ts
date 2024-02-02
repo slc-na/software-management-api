@@ -3,6 +3,7 @@ import { Resolver } from "@nestjs/graphql";
 import { CreateSemesterInput } from "src/modules/semesters/dto/create-semester.input";
 import { DeleteSemesterInput } from "src/modules/semesters/dto/delete-semester.input";
 import { SelectSemesterByIdInput } from "src/modules/semesters/dto/select-semester-by-id.input";
+import { SelectSemesterInput } from "src/modules/semesters/dto/select.semester.input";
 import { UpdateSemesterInput } from "src/modules/semesters/dto/update-semester.input";
 import { Semester } from "src/modules/semesters/semesters.model";
 import { SemestersService } from "src/modules/semesters/semesters.service";
