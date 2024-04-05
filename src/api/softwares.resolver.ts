@@ -11,6 +11,8 @@ import { SoftwaresCount } from "src/modules/softwares/softwares-count.model";
 import { SearchSoftwaresInput } from "src/modules/softwares/dto/search-softwares.input";
 import { SearchSoftwaresResult } from "src/modules/softwares/search-softwares-result.model";
 import { SoftwaresWithCount } from "src/modules/softwares/softwares-with-count.model";
+import { pullDataToMessierInput } from "src/modules/softwares/dto/pull-data-to-messier.input";
+import { BulkUpdateSoftwareByRoom } from "src/modules/softwares/dto/bulk-update-software-by-room.input";
 
 @Resolver()
 export class SoftwaresResolver {
@@ -50,4 +52,31 @@ export class SoftwaresResolver {
   async deleteSoftware(@Args('deleteSoftwareInput') deleteSoftwareInput: DeleteSoftwareInput) {
     return this.softwaresService.deleteSoftware(deleteSoftwareInput);
   }
+
+  //TODO: API to Messier
+
+  @Mutation(() => Software)
+  async pullDataToMessier(@Args('pullDataToMessierInput') pullDataToMessierInput: pullDataToMessierInput) {
+    return this.softwaresService.pullDataToMessier(pullDataToMessierInput);
+  }
+  @Mutation(() => Software)
+  async pushDataToMessier(@Args('deleteSoftwareInput') deleteSoftwareInput: DeleteSoftwareInput) {
+    return this.softwaresService.deleteSoftware(deleteSoftwareInput);
+  }
+
+  @Mutation(() => Software)
+  async insertSoftwareToMessier(@Args('deleteSoftwareInput') deleteSoftwareInput: DeleteSoftwareInput) {
+    return this.softwaresService.deleteSoftware(deleteSoftwareInput);
+  }
+
+  @Mutation(() => Software)
+  async deleteSoftwareFromMessier(@Args('deleteSoftwareInput') deleteSoftwareInput: DeleteSoftwareInput) {
+    return this.softwaresService.deleteSoftware(deleteSoftwareInput);
+  }
+
+  @Mutation(() => Software)
+  async updateSoftwareInMessier(@Args('deleteSoftwareInput') deleteSoftwareInput: DeleteSoftwareInput) {
+    return this.softwaresService.deleteSoftware(deleteSoftwareInput);
+  }
+
 }

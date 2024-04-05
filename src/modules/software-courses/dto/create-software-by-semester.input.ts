@@ -1,9 +1,9 @@
 import { Field, InputType, PartialType } from "@nestjs/graphql";
-import { Software } from "src/modules/softwares/softwares.model";
+import { CreateSoftwareInput } from "src/modules/softwares/dto/create-software.input";
 
 @InputType()
-export class CreateSoftwareBySemesterInput extends PartialType(Software){
-  @Field(() => String, { nullable: false }) softwareId: string;
-  @Field(() => String, { nullable: false }) courseId: string;
+export class CreateSoftwareBySemesterInput extends PartialType(CreateSoftwareInput){
+  @Field(() => String, { nullable: true }) softwareId: string;
+  @Field(() => String, { nullable: true }) courseId: string;
   @Field(() => String, { nullable: false }) semesterId: string;
 }

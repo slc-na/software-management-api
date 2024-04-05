@@ -28,8 +28,10 @@
     "@nestjs/platform-express": "^10.0.0",
     "@prisma/client": "^5.7.1",
     "graphql": "^16.8.1",
+    "graphql-type-json": "^0.3.2",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",

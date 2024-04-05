@@ -5,6 +5,7 @@ import { UpdateSoftwareOnRoomInput } from './dto/update-software-on-room.input';
 
 @Injectable()
 export class SoftwareOnRoomsRepository {
+
   constructor(private prisma: PrismaService) {}
 
   async createSoftwareOnRoom(params: {
@@ -104,5 +105,47 @@ export class SoftwareOnRoomsRepository {
         room: true,
       }
     });
+  }
+
+  createManySoftwareOnRoom(params: SoftwareOnRoom[]) {
+    return this.prisma.softwareOnRoom.createMany({
+      data:params
+    })
+  }
+
+  
+  async updateSoftwareByRoom(mappedData: { software: { id: any; status: any; }; }[], semesterId: string, roomId: string) {
+
+    const res = mappedData.map(async data => {
+      
+      const params = {
+        room: { connect: { id: roomId } },
+        semester: { connect: { id: semesterId } },
+        software: { connect: { id: data.software.id } }
+      }
+
+      const condition = {
+        roomId: roomId,
+        semesterId: semesterId,
+        softwareId: data.software.id
+      }
+
+      if (data.software.status) {
+        await this.prisma.softwareOnRoom.upsert({
+          where: {
+            softwareId_roomId_semesterId: condition
+          },
+          create: params,
+          update: params
+        });
+      } else {
+        await this.prisma.softwareOnRoom.delete({
+          where: {
+            softwareId_roomId_semesterId: condition
+          }
+        })
+      }
+    });
+
   }
 }

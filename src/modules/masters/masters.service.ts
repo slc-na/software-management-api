@@ -7,7 +7,7 @@ import { DeleteMasterInput } from "./dto/delete-master.input";
 
 @Injectable()
 export class MastersService {
-  constructor(private repository: MastersRepository) {}
+  constructor(private repository: MastersRepository) { }
 
   async createMaster(params: { name: Master['name'] }) {
     const { name } = params;

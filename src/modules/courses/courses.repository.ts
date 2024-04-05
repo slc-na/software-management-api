@@ -6,6 +6,7 @@ import { CoursesCount } from './courses-count.model';
 import { SearchCoursesInput } from './dto/search-courses.input';
 import { SelectCoursesInput } from './dto/select-courses.input';
 import { CreateCourseInput } from './dto/create-course.input';
+import { randomUUID } from 'crypto';
 
 @Injectable()
 export class CoursesRepository {
@@ -13,39 +14,53 @@ export class CoursesRepository {
 
   async createCourse(params: CreateCourseInput): Promise<Course> {
     const { code, departmentId, internetUsageTypeId, name, semesterId } = params;
-      return this.prisma.course.create({
-        data:{
-          code:code,
-          departmentId:departmentId,
-          internetUsageTypeId:internetUsageTypeId,
-          name:name
+    const courseId = randomUUID()
+
+    return this.prisma.course.create({
+      data: {
+        code: code,
+        departmentId: departmentId,
+        internetUsageTypeId: internetUsageTypeId,
+        name: name,
+        softwareCourses: {
+          connectOrCreate: {
+            where:{
+              softwareId_courseId_semesterId: {
+                semesterId: semesterId,
+                softwareId: "1",
+                courseId: courseId
+              }
+            },
+            create:{
+                semesterId: semesterId,
+                softwareId: "1",
+            }
+          }
         }
-      })
+      }
+    })
   }
 
   async updateCourse(params: UpdateCourseInput): Promise<Course> {
-    const { code, departmentId, internetUsageTypeId, name, newCode, newDepartmentId, newInternetUsageTypeId, newName, semesterId } = params;
-      
+    const { id } = params;
+
     const result = await this.prisma.course.findFirst({
-      where:{
-        code:code,
-        departmentId:departmentId,
-        internetUsageTypeId:internetUsageTypeId,
-        name:name
+      where: {
+        id:id,
       }
     })
 
-    if(result){
+    if (result) {
       return this.prisma.course.update({
-        where:result,
+        where: result,
         data: {
-          code: newCode,
-          departmentId: newDepartmentId,
-          internetUsageTypeId: newInternetUsageTypeId,
-          name: newName
+          code: params.code,
+          departmentId: params.departmentId,
+          internetUsageTypeId: params.internetUsageTypeId,
+          name: params.name
         },
       })
-    }else{
+    } else {
       throw new HttpException("Data not found", HttpStatus.NOT_FOUND);
     }
 
@@ -60,16 +75,16 @@ export class CoursesRepository {
     const { search, orderBy, orderDirection, skip, take, orderProperty, semesterId } = selectCoursesInput;
 
     const where: Prisma.CourseWhereInput = {
-      AND: [ 
+      AND: [
         search
           ? {
-              OR: [
-                { code: { contains: search, mode: 'insensitive' } },
-                { name: { contains: search, mode: 'insensitive' } },
-              ],
-            }
-          : {}, 
-        semesterId ? { 
+            OR: [
+              { code: { contains: search, mode: 'insensitive' } },
+              { name: { contains: search, mode: 'insensitive' } },
+            ],
+          }
+          : {},
+        semesterId ? {
           softwareCourses: {
             some: {
               semester: {
@@ -77,7 +92,7 @@ export class CoursesRepository {
               },
             },
           },
-        } : {}, 
+        } : {},
       ],
     };
 
@@ -85,17 +100,15 @@ export class CoursesRepository {
       where,
     });
 
-    console.log(course_query);
-
 
     const courses = await this.prisma.course.findMany({
       where,
       orderBy: orderBy ?
         orderProperty
           ? {
-            [orderBy]: {[orderProperty] : orderDirection || 'asc'},
+            [orderBy]: { [orderProperty]: orderDirection || 'asc' },
           }
-        : {[orderBy] : orderDirection || 'asc'}:
+          : { [orderBy]: orderDirection || 'asc' } :
         undefined,
       skip,
       take,
@@ -103,8 +116,8 @@ export class CoursesRepository {
         department: true,
         internetUsageType: true,
         softwareCourses: {
-          include:{
-            semester:true
+          include: {
+            semester: true
           }
         },
         _count: true,

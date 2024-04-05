@@ -18,10 +18,12 @@ model Software {
     note            String?
     createdAt       DateTime         @default(now())
     updatedAt       DateTime         @updatedAt
+    link            String           @default("")
     softwareGroups  SoftwareGroup[]
     softwareMasters SoftwareMaster[]
     softwareCourses SoftwareCourse[]
     softwareOnRooms SoftwareOnRoom[]
+    @@map("group")
 }
 
 model Group {
@@ -30,6 +32,7 @@ model Group {
     createdAt      DateTime        @default(now())
     updatedAt      DateTime        @updatedAt
     softwareGroups SoftwareGroup[]
+    @@map("software")
 }
 
 model SoftwareGroup {

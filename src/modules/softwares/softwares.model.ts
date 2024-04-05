@@ -14,6 +14,7 @@ export class Software {
   @Field(() => Number) numberOfLicense: SoftwareDB['numberOfLicense'];
   @Field(() => String) currentLicense: SoftwareDB['currentLicense'];
   @Field(() => String) installerPath: SoftwareDB['installerPath'];
+  @Field(() => String) link: SoftwareDB['link'];
   @Field(() => String, { nullable: true }) note?: SoftwareDB['note'];
   @Field(() => GraphQLISODateTime) createdAt: SoftwareDB['createdAt'];
   @Field(() => GraphQLISODateTime) updatedAt: SoftwareDB['updatedAt'];

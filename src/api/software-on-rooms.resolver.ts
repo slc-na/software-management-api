@@ -1,11 +1,14 @@
 import { Args, Mutation, Query } from "@nestjs/graphql";
 import { Resolver } from "@nestjs/graphql";
+import { RecapCount } from "src/modules/recaps/dto/recap-count.model";
 import { CreateSoftwareOnRoomInput } from "src/modules/software-on-rooms/dto/create-software-on-room.input";
 import { DeleteSoftwareOnRoomInput } from "src/modules/software-on-rooms/dto/delete-software-on-room.input";
 import { SelectSoftwareOnRoomByIdInput } from "src/modules/software-on-rooms/dto/select-software-on-room-by-id.input";
+import { SoftwareOnRoomBulkInput } from "src/modules/software-on-rooms/dto/software-on-room-bulk-input";
 import { UpdateSoftwareOnRoomInput } from "src/modules/software-on-rooms/dto/update-software-on-room.input";
 import { SoftwareOnRoom } from "src/modules/software-on-rooms/software-on-rooms.model";
 import { SoftwareOnRoomsService } from "src/modules/software-on-rooms/software-on-rooms.service";
+import { BulkUpdateSoftwareByRoom } from "src/modules/softwares/dto/bulk-update-software-by-room.input";
 
 @Resolver()
 export class SoftwareOnRoomsResolver {
@@ -35,4 +38,15 @@ export class SoftwareOnRoomsResolver {
   async deleteSoftwareOnRoom(@Args('deleteSoftwareOnRoomInput') deleteSoftwareOnRoomInput: DeleteSoftwareOnRoomInput) {
     return this.softwareOnRoomsService.deleteSoftwareOnRoom(deleteSoftwareOnRoomInput);
   }
+
+  @Mutation(() => SoftwareOnRoom)
+  async inputSoftwareRoomBulk(@Args('softwareOnRoomBulkInput') softwareOnRoomBulkInput:SoftwareOnRoomBulkInput){
+    return this.softwareOnRoomsService.inputSoftwareRoomBulk(softwareOnRoomBulkInput)
+  } 
+
+  @Mutation(() => RecapCount)
+  async bulkUpdateSoftwareByRoom(@Args('bulkUpdateSoftwareByRoom') bulkUpdateSoftwareByRoom: BulkUpdateSoftwareByRoom){
+    return {count: this.softwareOnRoomsService.bulkUpdateSoftwareByRoom(bulkUpdateSoftwareByRoom)}
+  }
+
 }

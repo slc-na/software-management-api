@@ -23,7 +23,11 @@
     "watchDirectory": "dynamicPriorityPolling",
     "excludeDirectories": [
       "**/node_modules",
-      "dist"
+      "dist",
+      // "downloads",
+      // "**/src/api",
+      // "**/src/modules"
     ]
+    // DISABLING HOT RELOAD FOR FOLDER API, MODULE, AND DOWNLOADS
   }
 }

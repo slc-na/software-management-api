@@ -26,6 +26,11 @@ import { SoftwaresModule } from './modules/softwares/softwares.module';
 import { SoftwaresResolver } from './api/softwares.resolver';
 import { RoomsModule } from './modules/rooms/rooms.module';
 import { RoomsResolver } from './api/rooms.resolver';
+import { SoftwareMastersResolver } from './api/software-masters.resolver';
+import { SoftwareMastersModule } from './modules/software-masters/software-masters.module';
+import { RecapsModule } from './modules/recaps/recaps.module';
+import { RecapsServices } from './modules/recaps/recaps.service';
+import { RecapsResolver } from './api/data.resolver';
 
 @Module({
   imports: [
@@ -46,7 +51,9 @@ import { RoomsResolver } from './api/rooms.resolver';
     SoftwareGroupsModule,
     SoftwareOnRoomsModule,
     SoftwaresModule,
+    SoftwareMastersModule,
     RoomsModule,
+    RecapsModule,
   ],
   controllers: [],
   providers: [
@@ -61,7 +68,10 @@ import { RoomsResolver } from './api/rooms.resolver';
     SoftwareGroupsResolver,
     SoftwareOnRoomsResolver,
     SoftwaresResolver,
+    SoftwareMastersResolver,
     RoomsResolver,
+    RecapsResolver,
+    RecapsServices,
   ],
 })
-export class AppModule {}
+export class AppModule { }

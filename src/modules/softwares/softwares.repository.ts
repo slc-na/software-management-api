@@ -6,17 +6,31 @@ import { SoftwaresCount } from './softwares-count.model';
 import { SearchSoftwaresInput } from './dto/search-softwares.input';
 import { SelectSoftwaresInput } from './dto/select-softwares.input';
 import { SoftwaresWithCount } from './softwares-with-count.model';
+import { Master } from '../masters/masters.model';
+import { CreateSoftwareInput } from './dto/create-software.input';
+import { randomUUID } from 'crypto';
+import { IncomingMessage } from 'http';
+import { SoftwareMaster } from '../software-masters/software-masters.model';
+import { RecapsJSONInput } from '../recaps/recaps.model';
 
 @Injectable()
 export class SoftwaresRepository {
+
+
   constructor(private prisma: PrismaService) { }
 
-  async createSoftware(params: {
-    data: Prisma.SoftwareCreateInput
-  }): Promise<Software> {
-    const { data } = params;
+  async createSoftware(params): Promise<Software> {
     return this.prisma.software.create({
-      data,
+      data: {
+        name: params.name,
+        version: params.version,
+        currentLicense: params.currentLicense,
+        license: params.license,
+        installerPath: params.installerPath,
+        note: params.note,
+        numberOfLicense: params.numberOfLicense,
+        link: params.link,
+      },
       include: {
         softwareCourses: true,
         softwareGroups: true,
@@ -24,6 +38,32 @@ export class SoftwaresRepository {
         softwareOnRooms: true,
         _count: true
       }
+    })
+  }
+
+  createSoftwareWithGroup(params: CreateSoftwareInput): Promise<Software> {
+    const softwareId = randomUUID()
+
+    return this.prisma.software.create({
+      data: {
+        id: softwareId,
+        name: params.name,
+        version: params.version,
+        currentLicense: params.currentLicense,
+        license: params.license,
+        installerPath: params.installerPath,
+        note: params.note,
+        numberOfLicense: params.numberOfLicense,
+        link: params.link,
+        softwareGroups: {
+          connect: {
+            softwareId_groupId: {
+              groupId: params.groupId,
+              softwareId: softwareId
+            }
+          }
+        }
+      },
     })
   }
 
@@ -35,54 +75,76 @@ export class SoftwaresRepository {
   async getSoftwares(selectSoftwaresInput: SelectSoftwaresInput): Promise<{ softwares: Software[]; count: number }> {
     const { search, orderBy, orderDirection, skip, take, semesterId, orderProperty } = selectSoftwaresInput;
 
-    const where: Prisma.SoftwareWhereInput = 
-      {
-        AND: [ 
-          search
-            ? {
-                OR: [
-                  { name: { contains: search, mode: 'insensitive' } },
-                ],
-              }
-            : {}, 
-          semesterId ? { 
-            softwareCourses: {
-              some: {
-                semester: {
-                  id: semesterId,
-                },
+    const where: Prisma.SoftwareWhereInput =
+    {
+      AND: [
+        search
+          ? {
+            OR: [
+              { name: { contains: search, mode: 'insensitive' } },
+            ],
+          }
+          : {},
+        semesterId ? {
+          softwareCourses: {
+            some: {
+              semester: {
+                id: semesterId,
               },
             },
-          } : {}, 
-        ],
-      };
+          },
+        } : {},
+      ],
+    };
 
-      const software_query = await this.prisma.software.findMany({
-        where,
-      });
+    const software_query = await this.prisma.software.findMany({
+      where,
+    });
 
     const softwares = await this.prisma.software.findMany({
       where: where,
       orderBy: orderBy ?
         orderProperty
           ? {
-            [orderBy]: {[orderProperty] : orderDirection || 'asc'},
+            [orderBy]: { [orderProperty]: orderDirection || 'asc' },
           }
-        : {[orderBy] : orderDirection || 'asc'}:
+          : { [orderBy]: orderDirection || 'asc' } :
         undefined,
       skip,
       take,
       include: {
         softwareCourses: true,
-        softwareGroups: true,
-        softwareMasters: true,
-        softwareOnRooms: true,
+        softwareGroups: {
+          include: {
+            group: true
+          }
+        },
+        softwareMasters: {
+          include: {
+            master: true
+          }
+        },
+        softwareOnRooms: {
+          include: {
+            room: {
+              include: {
+                masterOnRooms: {
+                  include: {
+                    master: true
+                  }
+                }
+              }
+            },
+            semester: true,
+            software: true,
+          }
+        },
         _count: true,
       },
     });
 
     const count = software_query.length;
-    return {softwares, count};
+    return { softwares, count };
   }
 
   async getSoftwareById(params: {
@@ -162,4 +224,5 @@ export class SoftwaresRepository {
       }
     });
   }
+
 }

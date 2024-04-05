@@ -6,24 +6,35 @@ import { UpdateSoftwareInput } from "./dto/update-software.input";
 import { DeleteSoftwareInput } from "./dto/delete-software.input";
 import { SelectSoftwaresInput } from "./dto/select-softwares.input";
 import { SearchSoftwaresInput } from "./dto/search-softwares.input";
+import { pullDataToMessierInput } from "./dto/pull-data-to-messier.input";
+import { CreateSoftwareInput } from "./dto/create-software.input";
+import { BulkUpdateSoftwareByRoom } from "./dto/bulk-update-software-by-room.input";
 
 @Injectable()
 export class SoftwaresService {
+
   constructor(private repository: SoftwaresRepository) { }
 
-  async createSoftware(params: { name: Software['name'], version: Software['version'], license: Software['license'], numberOfLicense: Software['numberOfLicense'], currentLicense: Software['currentLicense'], installerPath: Software['installerPath'], note?: Software['note'] }) {
-    const { name, version, license, currentLicense, installerPath, note, numberOfLicense } = params;
-    return await this.repository.createSoftware({
-      data: {
-        name: name,
-        version: version,
-        currentLicense: currentLicense,
-        license: license,
-        installerPath: installerPath,
-        note: note,
-        numberOfLicense: numberOfLicense,
-      }
-    });
+  async createSoftware(params:CreateSoftwareInput) {
+    const { name, version, license, currentLicense, installerPath, note, numberOfLicense, groupId, link } = params;
+    
+    if(!groupId){
+      return await this.repository.createSoftware({
+        data: {
+          name: name,
+          version: version,
+          currentLicense: currentLicense,
+          license: license,
+          installerPath: installerPath,
+          note: note,
+          numberOfLicense: numberOfLicense,
+          link: link
+        }
+      });
+    }else{
+      return await this.repository.createSoftwareWithGroup(params)
+    }
+    
   }
 
   async getSoftwaresCount() {
@@ -57,4 +68,9 @@ export class SoftwaresService {
       },
     });
   }
+
+  async pullDataToMessier(pullDataToMessierInput: pullDataToMessierInput) {
+    //TODO: Unimplemented method
+  }
+
 }

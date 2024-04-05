@@ -6,18 +6,14 @@ import { UpdateRoomInput } from "./dto/update-room.input";
 import { DeleteRoomInput } from "./dto/delete-room.input";
 import { SelectRoomsInput } from "./dto/select-rooms.input";
 import { SearchRoomsInput } from "./dto/search-rooms.input";
+import { CreateRoomInput } from "./dto/create-room.input";
 
 @Injectable()
 export class RoomsService {
-  constructor(private repository: RoomsRepository) {}
+  constructor(private repository: RoomsRepository) { }
 
-  async createRoom(params: { name: Room['name'] }) {
-    const { name } = params;
-    return await this.repository.createRoom({
-      data: {
-        name
-      }
-    });
+  async createRoom(params: CreateRoomInput) {
+    return await this.repository.createRoom(params);
   }
 
   async getRoomsCount() {
