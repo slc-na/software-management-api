@@ -172,20 +172,61 @@ export class RoomsRepository {
   }
 
   async updateRoom(params: UpdateRoomInput): Promise<Room> {
-    const { id, name } = params;
-    return this.prisma.room.update({
+    const { id, name, masterId, semesterId } = params;
+    console.log("params{}" , params);
+    console.log(masterId);
+
+    const res =  await this.prisma.room.update({
       where: {
         id: id
       },
       data: {
-        name: name
+        name: name,
+        masterOnRooms: {
+          connectOrCreate:{
+            where:{
+              masterId_roomId_semesterId:{
+                masterId:masterId,
+                roomId:id,
+                semesterId:semesterId
+              }
+            },
+            create:{
+              masterId:masterId,
+              semesterId:semesterId
+            }
+          }
       },
+    },
       include: {
         masterOnRooms: true,
         softwareOnRooms: true,
         _count: true,
       }
     });
+    console.log(res);
+
+    const masterOnRoomRes = await this.prisma.masterOnRoom.findFirst({
+      where:{
+        masterId:masterId,
+        roomId:id,
+        semesterId:semesterId
+      }
+    })
+    
+    if( masterOnRoomRes){
+      await this.prisma.masterOnRoom.deleteMany({
+        where:{
+          roomId:id,
+          semesterId:semesterId,
+          NOT:{
+            masterId:masterId
+          }
+        }
+      })
+    }
+    
+    return res
   }
 
   async deleteRoomById(params: {

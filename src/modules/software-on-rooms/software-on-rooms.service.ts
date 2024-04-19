@@ -6,6 +6,7 @@ import { UpdateSoftwareOnRoomInput } from "./dto/update-software-on-room.input";
 import { DeleteSoftwareOnRoomInput } from "./dto/delete-software-on-room.input";
 import { SoftwareOnRoomBulkInput } from "./dto/software-on-room-bulk-input";
 import { BulkUpdateSoftwareByRoom } from "../softwares/dto/bulk-update-software-by-room.input";
+import { GetSoftwareByRoomInput } from "./dto/get-software-by-room.input";
 
 @Injectable()
 export class SoftwareOnRoomsService {
@@ -37,6 +38,10 @@ export class SoftwareOnRoomsService {
   async getSoftwareOnRooms() {
     return await this.repository.getSoftwareOnRooms({});
   }
+
+  async getSoftwareByRoomId(params: GetSoftwareByRoomInput){
+    return await this.repository.getSoftwareByRoomId(params)
+  } 
 
   async getSoftwareOnRoomById(params: SelectSoftwareOnRoomByIdInput) {
     return this.repository.getSoftwareOnRoomById({

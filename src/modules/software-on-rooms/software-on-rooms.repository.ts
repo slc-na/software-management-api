@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { SoftwareOnRoom, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/database/prisma.service';
 import { UpdateSoftwareOnRoomInput } from './dto/update-software-on-room.input';
+import { GetSoftwareByRoomInput } from './dto/get-software-by-room.input';
 
 @Injectable()
 export class SoftwareOnRoomsRepository {
@@ -42,6 +43,19 @@ export class SoftwareOnRoomsRepository {
         room: true,
       }
     });
+  }
+
+  async getSoftwareByRoomId(params:GetSoftwareByRoomInput): Promise<SoftwareOnRoom[]>{
+
+    const res =  this.prisma.softwareOnRoom.findMany({
+      where:{
+        roomId: params.roomId,
+        semesterId: params.semesterId
+      }
+    })
+
+    return res
+
   }
 
   async getSoftwareOnRoomById(params: {
