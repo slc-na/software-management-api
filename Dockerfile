@@ -23,8 +23,8 @@ RUN apt --assume-yes install postgresql-client
 
 RUN apt --assume-yes install dos2unix
 RUN dos2unix ./wait-pg.sh
-
-EXPOSE 3000
+RUN npx prisma db push
+EXPOSE 3009
 
 CMD ["npm", "run", "start:dev"]
 

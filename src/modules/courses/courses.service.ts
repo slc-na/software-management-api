@@ -44,5 +44,10 @@ export class CoursesService {
         id: params.id
       }
     });
+
+  }
+
+  async getCourseOnSoftwareId(params: any): Promise<{ courses: Course[]; count: number }> {
+    return this.repository.getCourseBySoftwareId(params);
   }
 }

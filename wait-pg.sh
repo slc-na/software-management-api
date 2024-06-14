@@ -12,5 +12,6 @@ until PGPASSWORD=$POSTGRES_PASSWORD psql -h "$host" -U "$user" -c '\q'; do
 done
   
 >&2 echo "Postgres is up - executing command"
+exec npx prisma db push
 
 exec $cmd

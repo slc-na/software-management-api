@@ -12,11 +12,7 @@ export class GroupsRepository {
   }): Promise<Group> {
     const { data } = params;
     return this.prisma.group.create({
-      data,
-      include: {
-        softwareGroups: true,
-        _count: true,
-      }
+      data
     })
   }
 
@@ -34,10 +30,6 @@ export class GroupsRepository {
       cursor, 
       where, 
       orderBy,
-      include: {
-        softwareGroups: true,
-        _count: true,
-      }
     });
   }
 
@@ -47,10 +39,6 @@ export class GroupsRepository {
     const { where } = params;
     return this.prisma.group.findUnique({
       where,
-      include: {
-        softwareGroups: true,
-        _count: true,
-      }
     })
   }
 
@@ -63,10 +51,6 @@ export class GroupsRepository {
       data: {
         name: name
       },
-      include: {
-        softwareGroups: true,
-        _count: true,
-      }
     });
   }
 
@@ -76,10 +60,6 @@ export class GroupsRepository {
     const { where } = params;
     return this.prisma.group.delete({
       where,
-      include: {
-        softwareGroups: true,
-        _count: true,
-      }
     });
   }
 }

@@ -2,6 +2,7 @@ import { Args, Mutation, Query } from "@nestjs/graphql";
 import { Resolver } from "@nestjs/graphql";
 import { CreateRoomInput } from "src/modules/rooms/dto/create-room.input";
 import { DeleteRoomInput } from "src/modules/rooms/dto/delete-room.input";
+import { GetRoomBySoftwareIdInput } from "src/modules/rooms/dto/get-room-on-software-by-id.input";
 import { SearchRoomsInput } from "src/modules/rooms/dto/search-rooms.input";
 import { SelectRoomByIdInput } from "src/modules/rooms/dto/select-room-by-id.input";
 import { SelectRoomsInput } from "src/modules/rooms/dto/select-rooms.input";
@@ -14,7 +15,7 @@ import { SearchRoomsResult } from "src/modules/rooms/search-rooms-result.model";
 
 @Resolver()
 export class RoomsResolver {
-  constructor(private readonly roomsService: RoomsService) {}
+  constructor(private readonly roomsService: RoomsService) { }
 
   @Query(() => RoomsCount)
   async getRoomsCount() {
@@ -36,6 +37,11 @@ export class RoomsResolver {
     return this.roomsService.searchRooms(searchRoomsInput);
   }
 
+  @Query(() => SearchRoomsResult)
+  async getRoomBySoftwareId(@Args('getRoomOnSoftwareIdInput') getRoomOnSoftwareIdInput: GetRoomBySoftwareIdInput) {
+    return this.roomsService.getRoomOnSoftwareId(getRoomOnSoftwareIdInput);
+  }
+
   @Mutation(() => Room)
   async createRoom(@Args('createRoomInput') createRoomInput: CreateRoomInput) {
     return this.roomsService.createRoom(createRoomInput);
@@ -50,4 +56,6 @@ export class RoomsResolver {
   async deleteRoom(@Args('deleteRoomInput') deleteRoomInput: DeleteRoomInput) {
     return this.roomsService.deleteRoom(deleteRoomInput);
   }
+
+
 }

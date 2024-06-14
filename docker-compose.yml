@@ -12,7 +12,7 @@ services:
       - "3007:3000"
     networks:
       - backend
-    volumes : 
+    volumes:
       - /var/www/somen-backend:/app #selalu buat pakai full path untuk host -JO
 
   pgadmin:
@@ -22,8 +22,8 @@ services:
     ports:
       - "3008:80"
     environment:
-      PGADMIN_DEFAULT_EMAIL: slc.na@binus.edu
-      PGADMIN_DEFAULT_PASSWORD: somenSLC
+      PGADMIN_DEFAULT_EMAIL: na@binus.edu
+      PGADMIN_DEFAULT_PASSWORD: na
     volumes:
       - pgadmin-data:/var/lib/pgadmin
 
@@ -32,19 +32,21 @@ services:
     container_name: somen-postgres
     restart: always
     env_file:
-        - .env
+      - .env
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_NAME}
     volumes:
       - postgres:/var/lib/postgresql/data
     ports:
       - '3009:5432'
-    networks: 
+    networks:
       - backend
 
 networks:
   backend:
+
 
 volumes:
   postgres:

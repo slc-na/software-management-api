@@ -16,6 +16,9 @@ export class SelectSoftwaresInput {
   orderProperty?: string;
 
   @Field({ nullable: true })
+  groupId?: string;
+
+  @Field({ nullable: true })
   orderDirection?: 'asc' | 'desc';
 
   @Field(() => Int, { nullable: true })

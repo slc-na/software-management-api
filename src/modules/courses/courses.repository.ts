@@ -7,6 +7,7 @@ import { SearchCoursesInput } from './dto/search-courses.input';
 import { SelectCoursesInput } from './dto/select-courses.input';
 import { CreateCourseInput } from './dto/create-course.input';
 import { randomUUID } from 'crypto';
+import { getCourseBySoftwareIdInput } from './dto/get-course-on-software-by-id.input';
 
 @Injectable()
 export class CoursesRepository {
@@ -24,16 +25,16 @@ export class CoursesRepository {
         name: name,
         softwareCourses: {
           connectOrCreate: {
-            where:{
+            where: {
               softwareId_courseId_semesterId: {
                 semesterId: semesterId,
                 softwareId: "1",
                 courseId: courseId
               }
             },
-            create:{
-                semesterId: semesterId,
-                softwareId: "1",
+            create: {
+              semesterId: semesterId,
+              softwareId: "1",
             }
           }
         }
@@ -46,7 +47,7 @@ export class CoursesRepository {
 
     const result = await this.prisma.course.findFirst({
       where: {
-        id:id,
+        id: id,
       }
     })
 
@@ -178,5 +179,23 @@ export class CoursesRepository {
         _count: true,
       }
     });
+  }
+
+  async getCourseBySoftwareId(params: getCourseBySoftwareIdInput): Promise<{ courses: Course[]; count: number }> {
+    const courses = await this.prisma.course.findMany({
+      where: {
+        softwareCourses: {
+          some: {
+            semesterId: params.semesterId,
+            softwareId: params.softwareId
+          },
+        },
+      },
+      include: {
+        softwareCourses: true,
+      }
+    })
+    const count = courses.length;
+    return { courses, count }
   }
 }

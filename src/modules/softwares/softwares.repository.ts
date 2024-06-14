@@ -5,13 +5,9 @@ import { UpdateSoftwareInput } from './dto/update-software.input';
 import { SoftwaresCount } from './softwares-count.model';
 import { SearchSoftwaresInput } from './dto/search-softwares.input';
 import { SelectSoftwaresInput } from './dto/select-softwares.input';
-import { SoftwaresWithCount } from './softwares-with-count.model';
-import { Master } from '../masters/masters.model';
 import { CreateSoftwareInput } from './dto/create-software.input';
 import { randomUUID } from 'crypto';
-import { IncomingMessage } from 'http';
-import { SoftwareMaster } from '../software-masters/software-masters.model';
-import { RecapsJSONInput } from '../recaps/recaps.model';
+import { GetSoftwareByCourseIdInput } from './dto/get-software-on-course-id.input';
 
 @Injectable()
 export class SoftwaresRepository {
@@ -30,11 +26,11 @@ export class SoftwaresRepository {
         note: params.note,
         numberOfLicense: params.numberOfLicense,
         link: params.link,
+        groupId: params.groupId
       },
       include: {
         softwareCourses: true,
-        softwareGroups: true,
-        softwareMasters: true,
+        group: true,
         softwareOnRooms: true,
         _count: true
       }
@@ -55,12 +51,9 @@ export class SoftwaresRepository {
         note: params.note,
         numberOfLicense: params.numberOfLicense,
         link: params.link,
-        softwareGroups: {
+        group: {
           connect: {
-            softwareId_groupId: {
-              groupId: params.groupId,
-              softwareId: softwareId
-            }
+            id: params.groupId
           }
         }
       },
@@ -73,7 +66,7 @@ export class SoftwaresRepository {
   }
 
   async getSoftwares(selectSoftwaresInput: SelectSoftwaresInput): Promise<{ softwares: Software[]; count: number }> {
-    const { search, orderBy, orderDirection, skip, take, semesterId, orderProperty } = selectSoftwaresInput;
+    const { search, groupId, orderBy, orderDirection, skip, take, semesterId, orderProperty } = selectSoftwaresInput;
 
     const where: Prisma.SoftwareWhereInput =
     {
@@ -85,6 +78,9 @@ export class SoftwaresRepository {
             ],
           }
           : {},
+        groupId ? {
+          groupId: groupId,
+        } : {},
         semesterId ? {
           softwareCourses: {
             some: {
@@ -114,27 +110,10 @@ export class SoftwaresRepository {
       take,
       include: {
         softwareCourses: true,
-        softwareGroups: {
-          include: {
-            group: true
-          }
-        },
-        softwareMasters: {
-          include: {
-            master: true
-          }
-        },
+        group: true,
         softwareOnRooms: {
           include: {
-            room: {
-              include: {
-                masterOnRooms: {
-                  include: {
-                    master: true
-                  }
-                }
-              }
-            },
+            room: true,
             semester: true,
             software: true,
           }
@@ -142,6 +121,7 @@ export class SoftwaresRepository {
         _count: true,
       },
     });
+    console.log(softwares);
 
     const count = software_query.length;
     return { softwares, count };
@@ -155,8 +135,7 @@ export class SoftwaresRepository {
       where,
       include: {
         softwareCourses: true,
-        softwareGroups: true,
-        softwareMasters: true,
+        group: true,
         softwareOnRooms: true,
         _count: true
       }
@@ -172,8 +151,7 @@ export class SoftwaresRepository {
       },
       include: {
         softwareCourses: true,
-        softwareGroups: true,
-        softwareMasters: true,
+        group: true,
         softwareOnRooms: true,
         _count: true
       }
@@ -201,8 +179,7 @@ export class SoftwaresRepository {
       },
       include: {
         softwareCourses: true,
-        softwareGroups: true,
-        softwareMasters: true,
+        group: true,
         softwareOnRooms: true,
         _count: true
       }
@@ -217,12 +194,26 @@ export class SoftwaresRepository {
       where,
       include: {
         softwareCourses: true,
-        softwareGroups: true,
-        softwareMasters: true,
+        group: true,
         softwareOnRooms: true,
         _count: true
       }
     });
+  }
+
+  async getSoftwareByCourseId(params: GetSoftwareByCourseIdInput): Promise<{ softwares: Software[]; count: number }> {
+    const softwares = await this.prisma.software.findMany({
+      where: {
+        softwareCourses: {
+          some: {
+            semesterId: params.semesterId,
+            courseId: params.courseId
+          },
+        }
+      }
+    })
+    const count = softwares.length
+    return { softwares, count }
   }
 
 }

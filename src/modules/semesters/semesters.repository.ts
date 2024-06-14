@@ -15,7 +15,6 @@ export class SemestersRepository {
     return this.prisma.semester.create({
       data,
       include: {
-        masterOnRooms: true,
         softwareCourses: true,
         softwareOnRooms: true,
         _count: true,
@@ -29,7 +28,6 @@ export class SemestersRepository {
         createdAt : 'desc'
       },
       include: {
-        masterOnRooms: true,
         softwareCourses: {
           include:{
             course:true,
@@ -50,7 +48,6 @@ export class SemestersRepository {
     return this.prisma.semester.findUnique({
       where,
       include: {
-        masterOnRooms: true,
         softwareCourses: true,
         softwareOnRooms: true,
         _count: true,
@@ -69,7 +66,6 @@ export class SemestersRepository {
         isActive: true,
       },
       include: {
-        masterOnRooms: true,
         softwareCourses: true,
         softwareOnRooms: true,
         _count: true,
@@ -84,7 +80,6 @@ export class SemestersRepository {
     return this.prisma.semester.delete({
       where,
       include: {
-        masterOnRooms: true,
         softwareCourses: true,
         softwareOnRooms: true,
         _count: true,

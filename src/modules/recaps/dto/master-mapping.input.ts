@@ -1,5 +1,4 @@
 import { Field, InputType } from "@nestjs/graphql";
-import { Master } from "./master.input";
 
 @InputType()
 export class MasterMapping {

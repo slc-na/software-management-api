@@ -1,5 +1,8 @@
 import { Args, Mutation, Query } from "@nestjs/graphql";
 import { Resolver } from "@nestjs/graphql";
+import { CountRes } from "src/modules/count";
+import { BulkUpdateCourseBySoftwareInput } from "src/modules/software-courses/dto/bulk-update-course-by-software.input";
+import { BulkUpdateSoftwareByCourseInput } from "src/modules/software-courses/dto/bulk-update-room-by-software.input";
 import { CloneSoftwareCourseInput } from "src/modules/software-courses/dto/clone-software-course.input";
 import { CreateCourseBySemesterInput } from "src/modules/software-courses/dto/create-course-by-semester.input";
 import { CreateSoftwareBySemesterInput } from "src/modules/software-courses/dto/create-software-by-semester.input";
@@ -14,7 +17,7 @@ import { SoftwareCoursesService } from "src/modules/software-courses/software-co
 
 @Resolver()
 export class SoftwareCoursesResolver {
-  constructor(private readonly softwareCoursesService: SoftwareCoursesService) {}
+  constructor(private readonly softwareCoursesService: SoftwareCoursesService) { }
 
   @Query(() => [SoftwareCourse])
   async getSoftwareCourses() {
@@ -52,18 +55,29 @@ export class SoftwareCoursesResolver {
   }
 
   @Mutation(() => SoftwareCourse)
-  async inputSoftwareCourseBulk(@Args('SoftwareCourseBulkInput') softwareCourseBulkInput:SoftwareCourseBulkInput){
+  async inputSoftwareCourseBulk(@Args('SoftwareCourseBulkInput') softwareCourseBulkInput: SoftwareCourseBulkInput) {
     return this.softwareCoursesService.inputSoftwareCourseBulk(softwareCourseBulkInput)
   }
 
   @Mutation(() => SoftwareCourse)
-  async createSoftwareBySemester(@Args('CreateSoftwareBySemesterInput') createSoftwareBySemesterInput:CreateSoftwareBySemesterInput){
+  async createSoftwareBySemester(@Args('CreateSoftwareBySemesterInput') createSoftwareBySemesterInput: CreateSoftwareBySemesterInput) {
     return this.softwareCoursesService.createSoftwareBySemester(createSoftwareBySemesterInput)
   }
-  
+
   @Mutation(() => SoftwareCourse)
-  async createCourseBySemester(@Args('CreateCourseBySemesterInput') createCourseBySemesterInput:CreateCourseBySemesterInput){
+  async createCourseBySemester(@Args('CreateCourseBySemesterInput') createCourseBySemesterInput: CreateCourseBySemesterInput) {
     return this.softwareCoursesService.createCourseBySemester(createCourseBySemesterInput)
   }
+
+  @Mutation(() => CountRes)
+  async bulkUpdateSoftwareByCourse(@Args('BulkUpdateSoftwareByCourseInput') bulkUpdateSoftwareByCourseInput: BulkUpdateSoftwareByCourseInput) {
+    return { count: await this.softwareCoursesService.bulkUpdateSoftwareByCourse(bulkUpdateSoftwareByCourseInput) }
+
+  }
+
+  @Mutation(() => CountRes)
+  async bulkUpdateCourseBySoftware(@Args('BulkUpdateCourseBySoftwareInput') bulkUpdateCourseBySoftwareInput: BulkUpdateCourseBySoftwareInput) {
+    return { count: await this.softwareCoursesService.bulkUpdateCourseBySoftware(bulkUpdateCourseBySoftwareInput) }
+  } 
 
 }

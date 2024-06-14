@@ -9,19 +9,21 @@ import { CloneSoftwareCourseInput } from "./dto/clone-software-course.input";
 import { SoftwareCourseBulkInput } from "./dto/software-course-bulk-input";
 import { CreateSoftwareBySemesterInput } from "./dto/create-software-by-semester.input";
 import { CreateCourseBySemesterInput } from "./dto/create-course-by-semester.input";
+import { BulkUpdateSoftwareByCourseInput } from "./dto/bulk-update-room-by-software.input";
+import { BulkUpdateCourseBySoftwareInput } from "./dto/bulk-update-course-by-software.input";
 
 @Injectable()
 export class SoftwareCoursesService {
 
 
 
-  constructor(private repository: SoftwareCoursesRepository) {}
+  constructor(private repository: SoftwareCoursesRepository) { }
 
   async createSoftwareCourse(params: { softwareId: SoftwareCourse['softwareId'], courseId: SoftwareCourse['courseId'], semesterId: SoftwareCourse['semesterId'] }) {
-    
-    if(params.courseId == null){return this.createCourseBySemester(params);}
+
+    if (params.courseId == null) { return this.createCourseBySemester(params); }
     // if(params.softwareId == null){return this.createSoftwareBySemester(params);}
-    
+
     const { softwareId, courseId, semesterId } = params;
     return await this.repository.createSoftwareCourse({
       data: {
@@ -47,11 +49,11 @@ export class SoftwareCoursesService {
   async createSoftwareBySemester(createSoftwareBySemesterInput: CreateSoftwareBySemesterInput) {
     return await this.repository.createSoftwareBySemester(createSoftwareBySemesterInput);
   }
-  
+
   async createCourseBySemester(createCourseBySemesterInput: CreateCourseBySemesterInput) {
     return await this.repository.createCourseBySemester(createCourseBySemesterInput);
   }
-  
+
   async getSoftwareCourses() {
     return await this.repository.getSoftwareCourses({});
   }
@@ -72,7 +74,7 @@ export class SoftwareCoursesService {
     });
   }
 
-  async cloneSoftwareCourse(params: CloneSoftwareCourseInput){
+  async cloneSoftwareCourse(params: CloneSoftwareCourseInput) {
     return this.repository.cloneSoftwareCourse(params);
   }
 
@@ -94,33 +96,40 @@ export class SoftwareCoursesService {
 
   async inputSoftwareCourseBulk(params: SoftwareCourseBulkInput) {
     const singleCourse = params.courseIds.length == 1; const singleSoftware = params.softwareIds.length == 1
-    
-    if(singleCourse || singleSoftware && !(singleCourse && singleSoftware)){
-      
+
+    if (singleCourse || singleSoftware && !(singleCourse && singleSoftware)) {
+
       const semester = params.semesterId
-      
-      if(singleCourse){
-        const data:SoftwareCourse[] = singleCourse ? 
-        params.softwareIds.map((ids) =>({
-          softwareId: ids,
-          courseId:  params.courseIds[0],
-          semesterId: semester,
-          updatedAt:null,
-          createdAt:null
-        })) : 
-        params.courseIds.map((ids) =>({
-          softwareId: params.softwareIds[0],
-          courseId: ids,
-          semesterId: semester,
-          updatedAt:null,
-          createdAt:null
-        }))
-      return this.repository.createManySoftwareCourse(data);
+
+      if (singleCourse) {
+        const data: SoftwareCourse[] = singleCourse ?
+          params.softwareIds.map((ids) => ({
+            softwareId: ids,
+            courseId: params.courseIds[0],
+            semesterId: semester,
+            updatedAt: null,
+            createdAt: null
+          })) :
+          params.courseIds.map((ids) => ({
+            softwareId: params.softwareIds[0],
+            courseId: ids,
+            semesterId: semester,
+            updatedAt: null,
+            createdAt: null
+          }))
+        return this.repository.createManySoftwareCourse(data);
       }
 
-    throw new HttpException("software-course bad input, make sure only pass one multiple array", HttpStatus.BAD_REQUEST);
+      throw new HttpException("software-course bad input, make sure only pass one multiple array", HttpStatus.BAD_REQUEST);
 
     }
   }
 
+  async bulkUpdateSoftwareByCourse(params: BulkUpdateSoftwareByCourseInput) {
+    return this.repository.bulkUpdateSoftwareByCourse(params);
+  }
+
+  async bulkUpdateCourseBySoftware(params: BulkUpdateCourseBySoftwareInput) {
+    return this.repository.bulkUpdateCourseBySoftware(params);
+  }
 }

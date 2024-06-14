@@ -8,17 +8,17 @@ import { SelectSoftwaresInput } from "./dto/select-softwares.input";
 import { SearchSoftwaresInput } from "./dto/search-softwares.input";
 import { pullDataToMessierInput } from "./dto/pull-data-to-messier.input";
 import { CreateSoftwareInput } from "./dto/create-software.input";
-import { BulkUpdateSoftwareByRoom } from "./dto/bulk-update-software-by-room.input";
+import { GetSoftwareByCourseIdInput } from "./dto/get-software-on-course-id.input";
 
 @Injectable()
 export class SoftwaresService {
 
   constructor(private repository: SoftwaresRepository) { }
 
-  async createSoftware(params:CreateSoftwareInput) {
+  async createSoftware(params: CreateSoftwareInput) {
     const { name, version, license, currentLicense, installerPath, note, numberOfLicense, groupId, link } = params;
-    
-    if(!groupId){
+
+    if (!groupId) {
       return await this.repository.createSoftware({
         data: {
           name: name,
@@ -31,10 +31,10 @@ export class SoftwaresService {
           link: link
         }
       });
-    }else{
+    } else {
       return await this.repository.createSoftwareWithGroup(params)
     }
-    
+
   }
 
   async getSoftwaresCount() {
@@ -67,6 +67,10 @@ export class SoftwaresService {
         id: params.id
       },
     });
+  }
+
+  async getSoftwareByCourseId(params: GetSoftwareByCourseIdInput): Promise<{ softwares: Software[]; count: number }> {
+    return this.repository.getSoftwareByCourseId(params);
   }
 
   async pullDataToMessier(pullDataToMessierInput: pullDataToMessierInput) {

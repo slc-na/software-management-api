@@ -12,11 +12,13 @@ import { SearchSoftwaresInput } from "src/modules/softwares/dto/search-softwares
 import { SearchSoftwaresResult } from "src/modules/softwares/search-softwares-result.model";
 import { SoftwaresWithCount } from "src/modules/softwares/softwares-with-count.model";
 import { pullDataToMessierInput } from "src/modules/softwares/dto/pull-data-to-messier.input";
-import { BulkUpdateSoftwareByRoom } from "src/modules/softwares/dto/bulk-update-software-by-room.input";
+
+import { SoftwareCourse } from "src/modules/software-courses/software-courses.model";
+import { GetSoftwareByCourseIdInput } from "src/modules/softwares/dto/get-software-on-course-id.input";
 
 @Resolver()
 export class SoftwaresResolver {
-  constructor(private readonly softwaresService: SoftwaresService) {}
+  constructor(private readonly softwaresService: SoftwaresService) { }
 
   @Query(() => SoftwaresCount)
   async getSoftwaresCount() {
@@ -36,6 +38,11 @@ export class SoftwaresResolver {
   @Query(() => SearchSoftwaresResult)
   async searchSoftwares(@Args('searchSoftwaresInput') searchSoftwaresInput: SearchSoftwaresInput) {
     return this.softwaresService.searchSoftwares(searchSoftwaresInput);
+  }
+
+  @Query(() => SearchSoftwaresResult)
+  async getSoftwareByCourseId(@Args('getSoftwareByCourseIdInput') getSoftwareByCourseIdInput: GetSoftwareByCourseIdInput) {
+    return this.softwaresService.getSoftwareByCourseId(getSoftwareByCourseIdInput);
   }
 
   @Mutation(() => Software)

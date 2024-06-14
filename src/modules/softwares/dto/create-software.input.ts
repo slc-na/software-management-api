@@ -10,5 +10,5 @@ export class CreateSoftwareInput {
   @Field(() => String, { nullable: false }) installerPath: string;
   @Field(() => String, { nullable: true })  note?: string;
   @Field(() => String, { nullable: true })  link?: string;
-  @Field(() => String, { nullable: true }) groupId?: string;
+  @Field(() => String, { nullable: true }) groupId: string;
 }

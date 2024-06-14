@@ -19,51 +19,18 @@ model Software {
     createdAt       DateTime         @default(now())
     updatedAt       DateTime         @updatedAt
     link            String           @default("")
-    softwareGroups  SoftwareGroup[]
-    softwareMasters SoftwareMaster[]
+    groupId         String
+    group           Group            @relation(fields: [groupId], references: [id])
     softwareCourses SoftwareCourse[]
     softwareOnRooms SoftwareOnRoom[]
-    @@map("group")
 }
 
 model Group {
-    id             String          @id @default(uuid())
-    name           String
-    createdAt      DateTime        @default(now())
-    updatedAt      DateTime        @updatedAt
-    softwareGroups SoftwareGroup[]
-    @@map("software")
-}
-
-model SoftwareGroup {
-    software   Software @relation(fields: [softwareId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-    softwareId String
-    group      Group    @relation(fields: [groupId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-    groupId    String
-    createdAt  DateTime @default(now())
-    updatedAt  DateTime @updatedAt
-
-    @@id([softwareId, groupId])
-}
-
-model Master {
-    id              String           @id @default(uuid())
-    name            String
-    createdAt       DateTime         @default(now())
-    updatedAt       DateTime         @updatedAt
-    softwareMasters SoftwareMaster[]
-    masterOnRooms   MasterOnRoom[]
-}
-
-model SoftwareMaster {
-    software   Software @relation(fields: [softwareId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-    softwareId String
-    master     Master   @relation(fields: [masterId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-    masterId   String
-    createdAt  DateTime @default(now())
-    updatedAt  DateTime @updatedAt
-
-    @@id([softwareId, masterId])
+    id        String     @id @default(uuid())
+    name      String
+    createdAt DateTime   @default(now())
+    updatedAt DateTime   @updatedAt
+    software  Software[]
 }
 
 model InternetUsageType {
@@ -103,7 +70,6 @@ model Semester {
     updatedAt       DateTime         @updatedAt
     softwareCourses SoftwareCourse[]
     softwareOnRooms SoftwareOnRoom[]
-    masterOnRooms   MasterOnRoom[]
 }
 
 model Room {
@@ -111,8 +77,8 @@ model Room {
     name            String
     createdAt       DateTime         @default(now())
     updatedAt       DateTime         @updatedAt
+    description     String
     softwareOnRooms SoftwareOnRoom[]
-    masterOnRooms   MasterOnRoom[]
 }
 
 model SoftwareCourse {
@@ -139,17 +105,4 @@ model SoftwareOnRoom {
     updatedAt  DateTime @updatedAt
 
     @@id([softwareId, roomId, semesterId])
-}
-
-model MasterOnRoom {
-    master     Master   @relation(fields: [masterId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-    masterId   String
-    room       Room     @relation(fields: [roomId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-    roomId     String
-    semester   Semester @relation(fields: [semesterId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-    semesterId String
-    createdAt  DateTime @default(now())
-    updatedAt  DateTime @updatedAt
-
-    @@id([masterId, roomId, semesterId])
 }

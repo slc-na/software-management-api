@@ -7,33 +7,21 @@ import { SelectRoomsInput } from './dto/select-rooms.input';
 import { SearchRoomsInput } from './dto/search-rooms.input';
 import { CreateRoomInput } from './dto/create-room.input';
 import { randomUUID } from 'crypto';
+import { RoomsWithCount } from './rooms-with-count.model';
+import { GetRoomBySoftwareIdInput } from './dto/get-room-on-software-by-id.input';
 
 @Injectable()
 export class RoomsRepository {
   constructor(private prisma: PrismaService) { }
 
   async createRoom(params: CreateRoomInput): Promise<Room> {
-    const { name, semesterId, masterId } = params;
+    const { name, semesterId, description } = params;
     const uuid = randomUUID();
     return this.prisma.room.create({
       data: {
         name,
+        description: description,
         id: uuid,
-        masterOnRooms: {
-          connectOrCreate: {
-            where: {
-              masterId_roomId_semesterId: {
-                masterId: masterId,
-                roomId: uuid,
-                semesterId: semesterId,
-              }
-            },
-            create: {
-              masterId: masterId,
-              semesterId: semesterId,
-            }
-          }
-        },
         softwareOnRooms: {
           connectOrCreate: {
             where: {
@@ -46,12 +34,11 @@ export class RoomsRepository {
             create: {
               semesterId: semesterId,
               softwareId: "1"
-            } 
+            }
           }
         }
       },
       include: {
-        masterOnRooms: true,
         softwareOnRooms: true,
         _count: true,
       }
@@ -74,15 +61,14 @@ export class RoomsRepository {
             ],
           }
           : {},
-        semesterId ? {
-          masterOnRooms: {
-            some: {
-              semester: {
-                id: semesterId,
-              },
-            },
-          },
-        } : {},
+        semesterId
+          ? {
+            softwareOnRooms: {
+              some: {
+                semesterId: semesterId
+              }
+            }
+          } : {}
       ],
     };
 
@@ -97,20 +83,15 @@ export class RoomsRepository {
       orderBy: orderBy && !orderProperty
         ? { [orderBy]: orderDirection || 'asc' } : {},
       include: {
-        masterOnRooms: {
-          include: {
-            master: true
-          }
-        },
         softwareOnRooms: {
           include: {
+            room: true,
             semester: true,
             software: {
               select: {
                 id: true
               }
             },
-            room: true,
           }
         },
         _count: true,
@@ -120,8 +101,8 @@ export class RoomsRepository {
     if (orderProperty) {
 
       rooms.sort((a, b) => {
-        const masterA = a.masterOnRooms[0]?.[orderBy]?.[orderProperty] || '';
-        const masterB = b.masterOnRooms[0]?.[orderBy]?.[orderProperty] || '';
+        const masterA = a.softwareOnRooms[0]?.[orderBy]?.[orderProperty] || '';
+        const masterB = b.softwareOnRooms[0]?.[orderBy]?.[orderProperty] || '';
         if (masterA < masterB) {
           return orderDirection === 'asc' ? -1 : 1;
         }
@@ -145,7 +126,6 @@ export class RoomsRepository {
     return this.prisma.room.findUnique({
       where,
       include: {
-        masterOnRooms: true,
         softwareOnRooms: true,
         _count: true,
       }
@@ -160,7 +140,6 @@ export class RoomsRepository {
         ],
       },
       include: {
-        masterOnRooms: true,
         softwareOnRooms: true,
         _count: true,
       },
@@ -172,60 +151,24 @@ export class RoomsRepository {
   }
 
   async updateRoom(params: UpdateRoomInput): Promise<Room> {
-    const { id, name, masterId, semesterId } = params;
-    console.log("params{}" , params);
-    console.log(masterId);
+    const { id, name, semesterId, description } = params;
+    console.log("params{}", params);
 
-    const res =  await this.prisma.room.update({
+    const res = await this.prisma.room.update({
       where: {
         id: id
       },
       data: {
         name: name,
-        masterOnRooms: {
-          connectOrCreate:{
-            where:{
-              masterId_roomId_semesterId:{
-                masterId:masterId,
-                roomId:id,
-                semesterId:semesterId
-              }
-            },
-            create:{
-              masterId:masterId,
-              semesterId:semesterId
-            }
-          }
+        description: description,
       },
-    },
       include: {
-        masterOnRooms: true,
         softwareOnRooms: true,
         _count: true,
       }
     });
     console.log(res);
 
-    const masterOnRoomRes = await this.prisma.masterOnRoom.findFirst({
-      where:{
-        masterId:masterId,
-        roomId:id,
-        semesterId:semesterId
-      }
-    })
-    
-    if( masterOnRoomRes){
-      await this.prisma.masterOnRoom.deleteMany({
-        where:{
-          roomId:id,
-          semesterId:semesterId,
-          NOT:{
-            masterId:masterId
-          }
-        }
-      })
-    }
-    
     return res
   }
 
@@ -236,10 +179,30 @@ export class RoomsRepository {
     return this.prisma.room.delete({
       where,
       include: {
-        masterOnRooms: true,
         softwareOnRooms: true,
         _count: true,
       }
     });
+  }
+
+  async getRoomOnSoftwareId(params: GetRoomBySoftwareIdInput): Promise<{ rooms: Room[], counts: number }> {
+    const { softwareId, semesterId } = params;
+    const res = await this.prisma.room.findMany({
+      where: {
+        softwareOnRooms: {
+          some: {
+            softwareId: softwareId,
+            semesterId: semesterId
+          }
+        }
+      },
+      include: {
+        _count: true,
+      }
+    });
+
+    const count = res.length ? res.length : 0;
+
+    return { rooms: res, counts: count }
   }
 }

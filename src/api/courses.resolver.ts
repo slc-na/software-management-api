@@ -6,6 +6,7 @@ import { Course } from "src/modules/courses/courses.model";
 import { CoursesService } from "src/modules/courses/courses.service";
 import { CreateCourseInput } from "src/modules/courses/dto/create-course.input";
 import { DeleteCourseInput } from "src/modules/courses/dto/delete-course.input";
+import { getCourseBySoftwareIdInput } from "src/modules/courses/dto/get-course-on-software-by-id.input";
 import { SearchCoursesInput } from "src/modules/courses/dto/search-courses.input";
 import { SelectCourseByIdInput } from "src/modules/courses/dto/select-course-by-id.input";
 import { SelectCoursesInput } from "src/modules/courses/dto/select-courses.input";
@@ -14,7 +15,7 @@ import { SearchCoursesResult } from "src/modules/courses/search-courses-result.m
 
 @Resolver()
 export class CoursesResolver {
-  constructor(private readonly coursesService: CoursesService) {}
+  constructor(private readonly coursesService: CoursesService) { }
 
   @Query(() => CoursesCount)
   async getCoursesCount() {
@@ -34,6 +35,11 @@ export class CoursesResolver {
   @Query(() => SearchCoursesResult)
   async searchCourses(@Args('searchCoursesInput') searchCoursesInput: SearchCoursesInput) {
     return this.coursesService.searchCourses(searchCoursesInput);
+  }
+
+  @Query(() => SearchCoursesResult)
+  async getCourseBySoftwareId(@Args('getCourseOnSoftwareIdInput') getCourseOnSoftwareIdInput: getCourseBySoftwareIdInput) {
+    return this.coursesService.getCourseOnSoftwareId(getCourseOnSoftwareIdInput);
   }
 
   @Mutation(() => Course)

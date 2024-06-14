@@ -3,14 +3,16 @@ import { SoftwareOnRoom, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/database/prisma.service';
 import { UpdateSoftwareOnRoomInput } from './dto/update-software-on-room.input';
 import { GetSoftwareByRoomInput } from './dto/get-software-by-room.input';
+import { BulkUpdateSoftwareByRoomInput } from '../softwares/dto/bulk-update-software-by-room.input';
+import { BulkUpdateRoomBySoftwareInput } from '../softwares/dto/bulk-update-room-by-software.input';
 
 @Injectable()
 export class SoftwareOnRoomsRepository {
 
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async createSoftwareOnRoom(params: {
-    data: Prisma.SoftwareOnRoomCreateInput 
+    data: Prisma.SoftwareOnRoomCreateInput
   }): Promise<SoftwareOnRoom> {
     const { data } = params;
     return this.prisma.softwareOnRoom.create({
@@ -31,11 +33,11 @@ export class SoftwareOnRoomsRepository {
     orderBy?: Prisma.SoftwareOnRoomOrderByWithRelationInput,
   }): Promise<SoftwareOnRoom[]> {
     const { skip, take, cursor, where, orderBy } = params;
-    return this.prisma.softwareOnRoom.findMany({ 
-      skip, 
-      take, 
-      cursor, 
-      where, 
+    return this.prisma.softwareOnRoom.findMany({
+      skip,
+      take,
+      cursor,
+      where,
       orderBy,
       include: {
         software: true,
@@ -45,10 +47,13 @@ export class SoftwareOnRoomsRepository {
     });
   }
 
-  async getSoftwareByRoomId(params:GetSoftwareByRoomInput): Promise<SoftwareOnRoom[]>{
+  async getSoftwareByRoomId(params: GetSoftwareByRoomInput): Promise<SoftwareOnRoom[]> {
 
-    const res =  this.prisma.softwareOnRoom.findMany({
-      where:{
+    console.log(params);
+
+
+    const res = this.prisma.softwareOnRoom.findMany({
+      where: {
         roomId: params.roomId,
         semesterId: params.semesterId
       }
@@ -123,41 +128,57 @@ export class SoftwareOnRoomsRepository {
 
   createManySoftwareOnRoom(params: SoftwareOnRoom[]) {
     return this.prisma.softwareOnRoom.createMany({
-      data:params
+      data: params
     })
   }
 
-  
-  async updateSoftwareByRoom(mappedData: { software: { id: any; status: any; }; }[], semesterId: string, roomId: string) {
+  async updateRoomBySoftware(params: BulkUpdateRoomBySoftwareInput) {
 
-    const res = mappedData.map(async data => {
-      
-      const params = {
-        room: { connect: { id: roomId } },
-        semester: { connect: { id: semesterId } },
-        software: { connect: { id: data.software.id } }
-      }
+      console.log(params);
+      const { data, softwareId, semesterId } = params
 
-      const condition = {
+      await this.prisma.softwareOnRoom.deleteMany({
+        where: {
+          softwareId: softwareId,
+        }
+      })
+
+      data.map(async item => {
+
+        if (item) {
+          await this.prisma.softwareOnRoom.createMany({
+            data: {
+              roomId: item,
+              semesterId: semesterId,
+              softwareId: softwareId
+            }
+          });
+        }
+      });
+
+    }
+
+  async updateSoftwareByRoom(params: BulkUpdateSoftwareByRoomInput) {
+
+    console.log(params);
+
+    const { data, roomId, semesterId } = params
+
+    await this.prisma.softwareOnRoom.deleteMany({
+      where: {
         roomId: roomId,
-        semesterId: semesterId,
-        softwareId: data.software.id
       }
+    })
 
-      if (data.software.status) {
-        await this.prisma.softwareOnRoom.upsert({
-          where: {
-            softwareId_roomId_semesterId: condition
-          },
-          create: params,
-          update: params
-        });
-      } else {
-        await this.prisma.softwareOnRoom.delete({
-          where: {
-            softwareId_roomId_semesterId: condition
+    data.map(async item => {
+      if (item) {
+        await this.prisma.softwareOnRoom.create({
+          data: {
+            roomId: roomId,
+            semesterId: semesterId,
+            softwareId: item
           }
-        })
+        });
       }
     });
 

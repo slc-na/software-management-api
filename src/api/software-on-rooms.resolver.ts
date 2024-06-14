@@ -8,18 +8,18 @@ import { SelectSoftwareOnRoomByIdInput } from "src/modules/software-on-rooms/dto
 import { SoftwareOnRoomBulkInput } from "src/modules/software-on-rooms/dto/software-on-room-bulk-input";
 import { UpdateSoftwareOnRoomInput } from "src/modules/software-on-rooms/dto/update-software-on-room.input";
 import { SoftwareOnRoom } from "src/modules/software-on-rooms/software-on-rooms.model";
-import { SoftwareOnRoomsRepository } from "src/modules/software-on-rooms/software-on-rooms.repository";
 import { SoftwareOnRoomsService } from "src/modules/software-on-rooms/software-on-rooms.service";
-import { BulkUpdateSoftwareByRoom } from "src/modules/softwares/dto/bulk-update-software-by-room.input";
+import { BulkUpdateRoomBySoftwareInput } from "src/modules/softwares/dto/bulk-update-room-by-software.input";
+import { BulkUpdateSoftwareByRoomInput } from "src/modules/softwares/dto/bulk-update-software-by-room.input";
 
 @Resolver()
 export class SoftwareOnRoomsResolver {
-  constructor(private readonly softwareOnRoomsService: SoftwareOnRoomsService) {}
+  constructor(private readonly softwareOnRoomsService: SoftwareOnRoomsService) { }
   @Query(() => [SoftwareOnRoom])
   async getSoftwareOnRooms() {
     return this.softwareOnRoomsService.getSoftwareOnRooms();
   }
-  
+
   @Query(() => [SoftwareOnRoom])
   async getSoftwareByRoomId(@Args('getSoftwareByRoomInput') getSoftwareByRoomInput: GetSoftwareByRoomInput) {
     return this.softwareOnRoomsService.getSoftwareByRoomId(getSoftwareByRoomInput);
@@ -46,13 +46,18 @@ export class SoftwareOnRoomsResolver {
   }
 
   @Mutation(() => SoftwareOnRoom)
-  async inputSoftwareRoomBulk(@Args('softwareOnRoomBulkInput') softwareOnRoomBulkInput:SoftwareOnRoomBulkInput){
+  async inputSoftwareRoomBulk(@Args('softwareOnRoomBulkInput') softwareOnRoomBulkInput: SoftwareOnRoomBulkInput) {
     return this.softwareOnRoomsService.inputSoftwareRoomBulk(softwareOnRoomBulkInput)
-  } 
+  }
 
   @Mutation(() => RecapCount)
-  async bulkUpdateSoftwareByRoom(@Args('bulkUpdateSoftwareByRoom') bulkUpdateSoftwareByRoom: BulkUpdateSoftwareByRoom){
-    return {count: this.softwareOnRoomsService.bulkUpdateSoftwareByRoom(bulkUpdateSoftwareByRoom)}
+  async bulkUpdateSoftwareByRoom(@Args('BulkUpdateSoftwareByRoomInput') BulkUpdateSoftwareByRoomInput: BulkUpdateSoftwareByRoomInput) {
+    return { count: this.softwareOnRoomsService.bulkUpdateSoftwareByRoom(BulkUpdateSoftwareByRoomInput) }
+  }
+
+    @Mutation(() => RecapCount)
+  async bulkUpdateRoomBySoftware(@Args('BulkUpdateRoomBySoftwareInput') BulkUpdateRoomBySoftwareInput: BulkUpdateRoomBySoftwareInput) {
+    return { count: this.softwareOnRoomsService.bulkUpdateRoomBySoftware(BulkUpdateRoomBySoftwareInput) }
   }
 
 }

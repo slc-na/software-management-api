@@ -7,6 +7,7 @@ import { DeleteRoomInput } from "./dto/delete-room.input";
 import { SelectRoomsInput } from "./dto/select-rooms.input";
 import { SearchRoomsInput } from "./dto/search-rooms.input";
 import { CreateRoomInput } from "./dto/create-room.input";
+import { GetRoomBySoftwareIdInput } from "./dto/get-room-on-software-by-id.input";
 
 @Injectable()
 export class RoomsService {
@@ -45,5 +46,9 @@ export class RoomsService {
         id: params.id
       }
     });
+  }
+
+  async getRoomOnSoftwareId(params: GetRoomBySoftwareIdInput): Promise<{ rooms: Room[], counts: number }> {
+    return this.repository.getRoomOnSoftwareId(params);
   }
 }

@@ -40,9 +40,10 @@ export class RecapsServices {
     }
     try {
       for (const dataItem of data) {
-        const currentSoftware = await getFromCache(JSON.stringify(dataItem.software), softwareCache, this.repository.createSoftwareFromRecap(dataItem.software));
         const currentDepartment = await getFromCache(JSON.stringify(dataItem.department), departmentCache, this.repository.createDepartmentFromRecap(dataItem.department));
         const currentGroup = await getFromCache(JSON.stringify(dataItem.group), groupCache, this.repository.createGroupFromRecap(dataItem.group));
+        dataItem.software.groupId = currentGroup;
+        const currentSoftware = await getFromCache(JSON.stringify(dataItem.software), softwareCache, this.repository.createSoftwareFromRecap(dataItem.software));
         const currentInternetUsage = await getFromCache(JSON.stringify(dataItem.internetUsageType), internetUsageCache, this.repository.getInternetUsageFromRecap(dataItem.internetUsageType));
         const currentCourse = await getFromCache(JSON.stringify(dataItem.course.code), courseCache, this.repository.createCourseFromRecap(dataItem.course.code, currentDepartment, currentInternetUsage));
         const currentMasters = await getFromCache(JSON.stringify(dataItem.master), masterCache, this.repository.getMasterMapping(dataItem.master));
@@ -52,15 +53,17 @@ export class RecapsServices {
           courseId: currentCourse,
           groupId: currentGroup,
           departmentId: currentDepartment,
-          masters: currentMasters,
+          rooms: currentMasters,
           internetTypeId: currentInternetUsage
         };
 
         await this.repository.mapRecap(mapInput, params.semesterId);
       }
     } catch (error) {
+      console.log(error);
       throw new HttpException("Bad Request", HttpStatus.BAD_REQUEST);
     }
+    console.log(data.length);
     return data.length;
 
   }
@@ -76,6 +79,7 @@ export class RecapsServices {
         installerPath: data['installerPath'],
         note: data['note'],
         link: data['link'],
+        groupId: data['groupId']
       },
       department: {
         name: data['jurusan']
