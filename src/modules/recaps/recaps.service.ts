@@ -58,6 +58,10 @@ export class RecapsServices {
         };
 
         await this.repository.mapRecap(mapInput, params.semesterId);
+
+        //do here
+        // foreach cache software
+        // get group dari repository
       }
     } catch (error) {
       console.log(error);
@@ -105,6 +109,10 @@ export class RecapsServices {
     }));
 
     return mappedData
+  }
+
+  async syncToMessier() {
+    
   }
 
 }

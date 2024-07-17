@@ -23,6 +23,8 @@ import { RoomsResolver } from './api/rooms.resolver';
 import { RecapsModule } from './modules/recaps/recaps.module';
 import { RecapsServices } from './modules/recaps/recaps.service';
 import { RecapsResolver } from './api/data.resolver';
+import { MessierModule } from './modules/messier/messier.module';
+import { MessierResolver } from './api/messier.resolver';
 
 @Module({
   imports: [
@@ -42,6 +44,7 @@ import { RecapsResolver } from './api/data.resolver';
     SoftwaresModule,
     RoomsModule,
     RecapsModule,
+    MessierModule,
   ],
   controllers: [],
   providers: [
@@ -56,6 +59,7 @@ import { RecapsResolver } from './api/data.resolver';
     RoomsResolver,
     RecapsResolver,
     RecapsServices,
+    MessierResolver,
   ],
 })
 export class AppModule { }

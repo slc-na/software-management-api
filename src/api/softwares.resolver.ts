@@ -60,30 +60,4 @@ export class SoftwaresResolver {
     return this.softwaresService.deleteSoftware(deleteSoftwareInput);
   }
 
-  //TODO: API to Messier
-
-  @Mutation(() => Software)
-  async pullDataToMessier(@Args('pullDataToMessierInput') pullDataToMessierInput: pullDataToMessierInput) {
-    return this.softwaresService.pullDataToMessier(pullDataToMessierInput);
-  }
-  @Mutation(() => Software)
-  async pushDataToMessier(@Args('deleteSoftwareInput') deleteSoftwareInput: DeleteSoftwareInput) {
-    return this.softwaresService.deleteSoftware(deleteSoftwareInput);
-  }
-
-  @Mutation(() => Software)
-  async insertSoftwareToMessier(@Args('deleteSoftwareInput') deleteSoftwareInput: DeleteSoftwareInput) {
-    return this.softwaresService.deleteSoftware(deleteSoftwareInput);
-  }
-
-  @Mutation(() => Software)
-  async deleteSoftwareFromMessier(@Args('deleteSoftwareInput') deleteSoftwareInput: DeleteSoftwareInput) {
-    return this.softwaresService.deleteSoftware(deleteSoftwareInput);
-  }
-
-  @Mutation(() => Software)
-  async updateSoftwareInMessier(@Args('deleteSoftwareInput') deleteSoftwareInput: DeleteSoftwareInput) {
-    return this.softwaresService.deleteSoftware(deleteSoftwareInput);
-  }
-
 }

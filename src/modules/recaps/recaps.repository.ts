@@ -9,6 +9,7 @@ import { Room } from '../rooms/rooms.model';
 
 @Injectable()
 export class RecapsRepository {
+    constructor(private prisma: PrismaService) { }
 
     async mapRecap(mapInput: RecapMapping, semesterId: string) {
         try {
@@ -95,7 +96,6 @@ export class RecapsRepository {
 
     }
 
-
     async getMasterMapping(master: MasterMapping) {
         const mapping = ["General Black", "General Silver", "Bahasa", "Network", "Multi Media", "High Spec", "MacOs"];
         try {
@@ -114,6 +114,7 @@ export class RecapsRepository {
             return new HttpException("Bad Request", HttpStatus.BAD_REQUEST)
         }
     }
+
     async getInternetUsageFromRecap(params: { name: string; }) {
         try {
             const data = await this.prisma.internetUsageType.findFirst({
@@ -131,8 +132,6 @@ export class RecapsRepository {
             return data.id
         }
     }
-
-    constructor(private prisma: PrismaService) { }
 
     async createSoftwareFromRecap(params: CreateSoftwareInput) {
         try {

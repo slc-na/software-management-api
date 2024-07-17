@@ -73,8 +73,4 @@ export class SoftwaresService {
     return this.repository.getSoftwareByCourseId(params);
   }
 
-  async pullDataToMessier(pullDataToMessierInput: pullDataToMessierInput) {
-    //TODO: Unimplemented method
-  }
-
 }
