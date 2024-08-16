@@ -48,7 +48,7 @@ import { MessierResolver } from './api/messier.resolver';
   ],
   controllers: [],
   providers: [
-    CoursesResolver,  
+    CoursesResolver,
     DepartmentsResolver,
     GroupsResolver,
     InternetUsageTypesResolver,

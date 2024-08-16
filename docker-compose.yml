@@ -1,8 +1,7 @@
-version: '3.5'
-
 services:
-  somen-backend:
-    container_name: somen-backend
+  somen-back-end:
+    image: DAFFODIL.ad.slc.net:5000/slc/somen-back-end:latest
+    container_name: somen-back-end
     build:
       context: .
       dockerfile: Dockerfile
@@ -13,10 +12,11 @@ services:
     networks:
       - backend
     volumes:
-      - /var/www/somen-backend:/app #selalu buat pakai full path untuk host -JO
+      - /home/software/software-management-api:/app #selalu buat pakai full path untuk host -JO
+      # - /app/node_modules
 
   pgadmin:
-    image: dpage/pgadmin4
+    image: DAFFODIL.ad.slc.net:5000/slc/dpage/pgadmin4:latest
     container_name: somen-pgadmin
     restart: always
     ports:
@@ -26,9 +26,11 @@ services:
       PGADMIN_DEFAULT_PASSWORD: na
     volumes:
       - pgadmin-data:/var/lib/pgadmin
+    networks:
+      - backend
 
   postgres:
-    image: postgres
+    image: DAFFODIL.ad.slc.net:5000/slc/postgres:latest
     container_name: somen-postgres
     restart: always
     env_file:
@@ -46,6 +48,7 @@ services:
 
 networks:
   backend:
+    driver: bridge
 
 
 volumes:

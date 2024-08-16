@@ -1,0 +1,488 @@
+{
+	"info": {
+		"_postman_id": "e412f58f-1037-40c2-8ac2-26fc21980f0a",
+		"name": "Request NA",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27388059"
+	},
+	"item": [
+		{
+			"name": "Semester",
+			"item": [
+				{
+					"name": "Get Active Semester",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}Semester/Active",
+							"host": [
+								"{{baseUrl}}Semester"
+							],
+							"path": [
+								"Active"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Semesters With Active Date",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}Semester/GetSemestersWithActiveDate",
+							"host": [
+								"{{baseUrl}}Semester"
+							],
+							"path": [
+								"GetSemestersWithActiveDate"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Software",
+			"item": [
+				{
+					"name": "Get All Softwares",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}Software/GetAllSoftwares",
+							"host": [
+								"{{baseUrl}}Software"
+							],
+							"path": [
+								"GetAllSoftwares"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAllSoftwaresBySemester (by master)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}Software/GetAllSoftwaresBySemester?semesterId={{semesterId}}",
+							"host": [
+								"{{baseUrl}}Software"
+							],
+							"path": [
+								"GetAllSoftwaresBySemester"
+							],
+							"query": [
+								{
+									"key": "semesterId",
+									"value": "{{semesterId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetSoftwaresBySemester",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}Software/GetSoftwareBySemester?semesterId={{semesterId}}",
+							"host": [
+								"{{baseUrl}}Software"
+							],
+							"path": [
+								"GetSoftwareBySemester"
+							],
+							"query": [
+								{
+									"key": "semesterId",
+									"value": "{{semesterId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetSoftwaresByRoom",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}Software/GetSoftwaresByRoom?roomId=a7ff28f1-bd85-410b-b222-a29c619068fa",
+							"host": [
+								"{{baseUrl}}Software"
+							],
+							"path": [
+								"GetSoftwaresByRoom"
+							],
+							"query": [
+								{
+									"key": "roomId",
+									"value": "a7ff28f1-bd85-410b-b222-a29c619068fa"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetSoftwareNames (Get Software List)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}Software/GetSoftwareNames",
+							"host": [
+								"{{baseUrl}}Software"
+							],
+							"path": [
+								"GetSoftwareNames"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save Software",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "SemesterId",
+									"value": "7e4c0046-ec3d-4298-844a-51cc90564335",
+									"description": "Test Semester",
+									"type": "text"
+								},
+								{
+									"key": "Name",
+									"value": "test",
+									"type": "text"
+								},
+								{
+									"key": "Version",
+									"value": "test",
+									"type": "text"
+								},
+								{
+									"key": "License",
+									"value": "test",
+									"type": "text"
+								},
+								{
+									"key": "CurrentLicense",
+									"value": "test",
+									"type": "text"
+								},
+								{
+									"key": "NumberOfLicense",
+									"value": "test",
+									"type": "text"
+								},
+								{
+									"key": "Group",
+									"value": "test",
+									"type": "text"
+								},
+								{
+									"key": "Link",
+									"value": "test",
+									"type": "text"
+								},
+								{
+									"key": "Note",
+									"value": "test",
+									"type": "text"
+								},
+								{
+									"key": "InstallerPath",
+									"value": "test",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}Software/SaveSoftware",
+							"host": [
+								"{{baseUrl}}Software"
+							],
+							"path": [
+								"SaveSoftware"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Software",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "SoftwareId",
+									"value": "280ffe7f-4b6b-43b1-8888-659c2fe15087",
+									"description": "Test Semester",
+									"type": "text"
+								},
+								{
+									"key": "Reason",
+									"value": "test",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}Software/DeleteSoftware",
+							"host": [
+								"{{baseUrl}}Software"
+							],
+							"path": [
+								"DeleteSoftware"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SaveSoftwareBulk",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"SemesterId\": \"{{semesterId}}\",\r\n    \"SoftwareList\": [\r\n        {\r\n            \"CurrentLicense\": \"test\",\r\n            \"Group\": \"testvvzz\",\r\n            \"InstallerPath\": \"testvvzz\",\r\n            \"License\": \"testvvzz\",\r\n            \"Link\": \"testvvzz\",\r\n            \"Name\": \"testvvzz\",\r\n            \"Note\": \"testvvzz\",\r\n            \"NumberOfLicense\": \"testvvzz\",\r\n            \"Version\": \"testvvzz\"\r\n        }\r\n    ]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}Software/SaveSoftwareBulk",
+							"host": [
+								"{{baseUrl}}Software"
+							],
+							"path": [
+								"SaveSoftwareBulk"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Room",
+			"item": [
+				{
+					"name": "GetCourseOutlineWithDepartments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}Room/GetCourseOutlineWithDepartments?semesterId={{semesterId}}",
+							"host": [
+								"{{baseUrl}}Room"
+							],
+							"path": [
+								"GetCourseOutlineWithDepartments"
+							],
+							"query": [
+								{
+									"key": "semesterId",
+									"value": "{{semesterId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Rooms",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}Room/GetRooms",
+							"host": [
+								"{{baseUrl}}Room"
+							],
+							"path": [
+								"GetRooms"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Masters",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}Room/GetMasters?SemesterId=a7ff28f1-bd85-410b-b222-a29c619068fa",
+							"host": [
+								"{{baseUrl}}Room"
+							],
+							"path": [
+								"GetMasters"
+							],
+							"query": [
+								{
+									"key": "SemesterId",
+									"value": "{{semesterId}}",
+									"disabled": true
+								},
+								{
+									"key": "SemesterId",
+									"value": "a7ff28f1-bd85-410b-b222-a29c619068fa"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Rooms By Softwares",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}Room/GetRoomsBySoftwares?softwareIds=5c1d42c0-bb59-41ec-bada-8a65c50adba4",
+							"host": [
+								"{{baseUrl}}Room"
+							],
+							"path": [
+								"GetRoomsBySoftwares"
+							],
+							"query": [
+								{
+									"key": "softwareIds",
+									"value": "5c1d42c0-bb59-41ec-bada-8a65c50adba4",
+									"description": "id 1"
+								},
+								{
+									"key": "softwareIds",
+									"value": "6a8de84f-8417-420e-baac-e75a5dd79e09",
+									"description": "id 2",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GenerateMasterRoom",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "SemesterId",
+									"value": "7e4c0046-ec3d-4298-844a-51cc90564335",
+									"description": "Test Semester",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}Room/GenerateMasterRoom",
+							"host": [
+								"{{baseUrl}}Room"
+							],
+							"path": [
+								"GenerateMasterRoom"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SaveMultipleMapSoftwareToMaster",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"SemesterId\": \"a7ff28f1-bd85-410b-b222-a29c619068fa\",\r\n    \"SoftwareId\": \"378c0443-9e58-4d32-a06d-817595d87e9f\",\r\n    \"MasterIds\": [\r\n        \"d447b269-df64-4d64-8ae3-67667e0d373c\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}Room/MapSoftwareToMasters",
+							"host": [
+								"{{baseUrl}}Room"
+							],
+							"path": [
+								"MapSoftwareToMasters"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SaveMultipleMapSoftwareToMaster Copy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"SemesterId\": \"a7ff28f1-bd85-410b-b222-a29c619068fa\",\r\n    \"SoftwareIds\": [\r\n        \"378c0443-9e58-4d32-a06d-817595d87e9f\",\r\n        \"508a17b6-9e99-4571-bec2-8bcb00d6cc1e\"\r\n    ],\r\n    \"Room\": \"0603\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}Room/SaveMultipleMapSoftwareToMaster",
+							"host": [
+								"{{baseUrl}}Room"
+							],
+							"path": [
+								"SaveMultipleMapSoftwareToMaster"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Course Outline",
+			"item": []
+		}
+	]
+}

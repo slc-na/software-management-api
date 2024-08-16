@@ -2,6 +2,8 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 async function main() {
 
+    
+
     const default_semester = await prisma.semester.upsert({
         where: { id: '1' },
         update: {},
@@ -43,11 +45,12 @@ async function main() {
             note: 'This is a note',
         },
     })
+
     const default_room = await prisma.room.upsert({
         where: { id: '1' },
         update: {},
         create: {
-            description: "undefind",
+            description: "undefined",
             name: 'Default Room',
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -66,16 +69,25 @@ async function main() {
         }
     })
 
-    const default_internet_usage = await prisma.internetUsageType.upsert({
-        where: { id: '1' },
-        update: {},
-        create: {
-            name: 'Default Internet Usage',
-            id: '1',
-            createdAt: new Date(),
-            updatedAt: new Date(),
-        }
-    })
+    const internetUsageTypes = [
+        { name: '-', id: '1' },
+        { name: 'no', id: '2' },
+        { name: 'yes', id: '3' }
+    ];
+
+    for (const usageType of internetUsageTypes) {
+        await prisma.internetUsageType.upsert({
+            where: { id: usageType.id },
+            update: {},
+            create: {
+                name: usageType.name,
+                id: usageType.id,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            }
+        });
+    }
+
 
     const default_course = await prisma.course.upsert({
         where: { id: '1' },
@@ -91,6 +103,41 @@ async function main() {
         }
 
     })
+
+    const GeneralBlack = ["0"];
+    const GeneralSilver = ["602", "604", "606", "608", "609", "610", "630", "631", "721", "722", "723", "724", "725", "727", "729", "622", "624", "626", "628"];
+    const HighSpec = ["706", "708", "710"];
+    const MultiMedia = ["621", "623", "625", "627", "629"];
+    const Bahasa = ["605", "613", "614", "730", "731"];
+    const Network = ['601', '603'];
+    const MacOs = ['711a'];
+    
+    const roomCategories = {
+        "General Black": GeneralBlack,
+        "General Silver": GeneralSilver,
+        "High Spec": HighSpec,
+        "Multi Media": MultiMedia,
+        "Bahasa": Bahasa,
+        "Network": Network,
+        "MacOs": MacOs
+    };
+    
+    for (const [description, roomNames] of Object.entries(roomCategories)) {
+        for (const name of roomNames) {
+            await prisma.room.upsert({
+                where: { id: name },
+                update: {},
+                create: {
+                    description,
+                    name: description, 
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
+                    id: name,
+                }
+            });
+        }
+    }
+
 
 }
 main()

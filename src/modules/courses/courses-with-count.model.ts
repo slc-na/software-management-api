@@ -1,4 +1,4 @@
-import { Field,  Int, ObjectType } from "@nestjs/graphql";
+import { Field, Int, ObjectType } from "@nestjs/graphql";
 import { Course } from "./courses.model";
 
 
